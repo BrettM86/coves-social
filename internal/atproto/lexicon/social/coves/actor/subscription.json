@@ -1,0 +1,31 @@
+{
+  "lexicon": 1,
+  "id": "social.coves.actor.subscription",
+  "defs": {
+    "main": {
+      "type": "record",
+      "description": "A subscription to a community",
+      "key": "tid",
+      "record": {
+        "type": "object",
+        "required": ["community", "createdAt"],
+        "properties": {
+          "community": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "AT-URI of the community (DID-based)"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime"
+          },
+          "endedAt": {
+            "type": "string",
+            "format": "datetime",
+            "description": "When the subscription ended (null if current)"
+          }
+        }
+      }
+    }
+  }
+}

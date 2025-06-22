@@ -1,0 +1,43 @@
+{
+  "lexicon": 1,
+  "id": "social.coves.actor.membership",
+  "defs": {
+    "main": {
+      "type": "record",
+      "description": "Membership in a community (has reputation)",
+      "key": "tid",
+      "record": {
+        "type": "object",
+        "required": ["community", "reputation", "joinedAt", "createdAt"],
+        "properties": {
+          "community": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "AT-URI of the community (DID-based)"
+          },
+          "reputation": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 0,
+            "description": "Reputation score within the community"
+          },
+          "subscribedAt": {
+            "type": "string",
+            "format": "datetime",
+            "description": "When the user subscribed to a community"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime",
+            "description": "When the user was created"
+          },
+          "endedAt": {
+            "type": "string",
+            "format": "datetime",
+            "description": "When the membership ended (null if current)"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "lexicon": 1,
+  "id": "social.coves.interaction.vote",
+  "defs": {
+    "main": {
+      "type": "record",
+      "description": "An upvote on a post or comment",
+      "key": "tid",
+      "record": {
+        "type": "object",
+        "required": ["subject", "createdAt"],
+        "properties": {
+          "subject": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "AT-URI of the post or comment being voted on"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime"
+          }
+        }
+      }
+    }
+  }
+}

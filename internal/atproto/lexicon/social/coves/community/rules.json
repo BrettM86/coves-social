@@ -1,0 +1,151 @@
+{
+  "lexicon": 1,
+  "id": "social.coves.community.rules",
+  "defs": {
+    "main": {
+      "type": "record",
+      "description": "Community rules and configuration",
+      "key": "literal:self",
+      "record": {
+        "type": "object",
+        "properties": {
+          "postTypes": {
+            "type": "ref",
+            "ref": "#postTypeConfig"
+          },
+          "contentRestrictions": {
+            "type": "ref",
+            "ref": "#contentRestrictions"
+          },
+          "geoRestrictions": {
+            "type": "ref",
+            "ref": "#geoRestrictions"
+          },
+          "customTags": {
+            "type": "array",
+            "maxLength": 50,
+            "description": "Additional tags beyond predefined ones",
+            "items": {
+              "type": "string",
+              "maxLength": 32
+            }
+          },
+          "textRules": {
+            "type": "array",
+            "maxLength": 20,
+            "description": "Community-specific rules",
+            "items": {
+              "type": "ref",
+              "ref": "#rule"
+            }
+          },
+          "moderatorList": {
+            "type": "array",
+            "description": "DIDs of community moderators (if moderator-based)",
+            "items": {
+              "type": "string",
+              "format": "did"
+            }
+          },
+          "sortitionConfig": {
+            "type": "ref",
+            "ref": "#sortitionConfig",
+            "description": "Configuration for sortition-based moderation"
+          }
+        }
+      }
+    },
+    "postTypeConfig": {
+      "type": "object",
+      "description": "Allowed post types in the community",
+      "properties": {
+        "textOnly": {
+          "type": "boolean",
+          "default": false,
+          "description": "Restrict to text posts only"
+        },
+        "allowVideo": {
+          "type": "boolean",
+          "default": true
+        },
+        "allowImage": {
+          "type": "boolean",
+          "default": true
+        },
+        "allowArticle": {
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
+    "contentRestrictions": {
+      "type": "object",
+      "description": "Content filtering rules",
+      "properties": {
+        "blockedDomains": {
+          "type": "array",
+          "description": "Domains that cannot be linked",
+          "items": {
+            "type": "string"
+          }
+        },
+        "allowedDomains": {
+          "type": "array",
+          "description": "If set, only these domains can be linked",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "geoRestrictions": {
+      "type": "object",
+      "description": "Geographic posting restrictions",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "allowedCountries": {
+          "type": "array",
+          "description": "ISO 3166-1 alpha-2 country codes",
+          "items": {
+            "type": "string",
+            "maxLength": 2
+          }
+        },
+        "allowedRegions": {
+          "type": "array",
+          "description": "Specific regions/states allowed",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "sortitionConfig": {
+      "type": "object",
+      "description": "Configuration for sortition-based moderation",
+      "properties": {
+        "tagThreshold": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 5,
+          "description": "Number of tags needed to trigger action"
+        },
+        "tribunalThreshold": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 3,
+          "description": "Number of tags to trigger tribunal review"
+        },
+        "jurySize": {
+          "type": "integer",
+          "minimum": 9,
+          "default": 9,
+          "description": "Number of jurors for tribunal"
+        }
+      }
+    }
+  }
+}

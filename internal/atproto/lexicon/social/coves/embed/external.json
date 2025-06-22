@@ -1,0 +1,38 @@
+{
+  "lexicon": 1,
+  "id": "social.coves.embed.external",
+  "defs": {
+    "main": {
+      "type": "object",
+      "description": "External link embed with preview metadata",
+      "required": ["uri"],
+      "properties": {
+        "uri": {
+          "type": "string",
+          "format": "uri",
+          "description": "URI of the external content"
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 500,
+          "description": "Title of the linked content"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 1000,
+          "description": "Description or excerpt of the linked content"
+        },
+        "thumb": {
+          "type": "blob",
+          "accept": ["image/png", "image/jpeg", "image/webp"],
+          "maxSize": 1000000,
+          "description": "Thumbnail image for the link"
+        },
+        "domain": {
+          "type": "string",
+          "description": "Domain of the linked content"
+        }
+      }
+    }
+  }
+}
