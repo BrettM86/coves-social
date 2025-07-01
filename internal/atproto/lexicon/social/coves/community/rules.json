@@ -132,14 +132,14 @@
       "properties": {
         "tagThreshold": {
           "type": "integer",
-          "minimum": 1,
+          "minimum": 10,
           "default": 15,
           "description": "Number of tags needed to trigger action"
         },
         "tribunalThreshold": {
           "type": "integer",
-          "minimum": 1,
-          "default": 50,
+          "minimum": 10,
+          "default": 30,
           "description": "Number of tags to trigger tribunal review"
         },
         "jurySize": {
