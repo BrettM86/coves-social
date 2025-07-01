@@ -1,0 +1,98 @@
+{
+  "lexicon": 1,
+  "id": "social.coves.community.profile",
+  "defs": {
+    "main": {
+      "type": "record",
+      "description": "A community's profile information",
+      "key": "literal:self",
+      "record": {
+        "type": "object",
+        "required": ["name", "createdAt", "creator", "moderationType", "federatedFrom"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 64,
+            "description": "Unique community name"
+          },
+          "displayName": {
+            "type": "string",
+            "maxGraphemes": 128,
+            "maxLength": 1280,
+            "description": "Display name for the community"
+          },
+          "description": {
+            "type": "string",
+            "maxGraphemes": 1000,
+            "maxLength": 10000,
+            "description": "Community description with rich text support"
+          },
+          "descriptionMarkup": {
+            "type": "array",
+            "description": "Rich text annotations for description",
+            "items": {
+              "type": "union",
+              "refs": [
+                "social.coves.richtext.markup",
+                "social.coves.richtext.mention",
+                "social.coves.richtext.link"
+              ]
+            }
+          },
+          "avatar": {
+            "type": "blob",
+            "accept": ["image/png", "image/jpeg", "image/webp"],
+            "maxSize": 1000000
+          },
+          "banner": {
+            "type": "blob",
+            "accept": ["image/png", "image/jpeg", "image/webp"],
+            "maxSize": 2000000
+          },
+          "creator": {
+            "type": "string",
+            "format": "did",
+            "description": "DID of the community creator"
+          },
+          "moderationType": {
+            "type": "string",
+            "knownValues": ["moderator", "sortition"],
+            "description": "Type of moderation system"
+          },
+          "contentWarnings": {
+            "type": "array",
+            "description": "Required content warnings for this community",
+            "items": {
+              "type": "string",
+              "knownValues": ["nsfw", "violence", "spoilers"],
+              "maxLength": 32
+            }
+          },
+          "memberCount": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Cached count of community members"
+          },
+          "subscriberCount": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Cached count of community subscribers"
+          },
+          "federatedFrom": {
+            "type": "string",
+            "knownValues": ["lemmy", "coves"],
+            "description": "Platform community originated from"
+          },
+          "federatedId": {
+            "type": "string",
+            "description": "Original ID on federated platform"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime"
+          }
+        }
+      }
+    }
+  }
+}

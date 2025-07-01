@@ -1,0 +1,148 @@
+{
+  "lexicon": 1,
+  "id": "social.coves.post.microblog",
+  "defs": {
+    "main": {
+      "type": "record",
+      "description": "A microblog post (typically from federated platforms like Bluesky/Mastodon)",
+      "key": "tid",
+      "record": {
+        "type": "object",
+        "required": ["community", "content", "createdAt"],
+        "properties": {
+          "community": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "AT-URI of the community this was posted to"
+          },
+          "content": {
+            "type": "string",
+            "maxLength": 5000,
+            "description": "Microblog post content (plain text or markdown)"
+          },
+          "contentMarkup": {
+            "type": "array",
+            "description": "Rich text annotations for content",
+            "items": {
+              "type": "union",
+              "refs": [
+                "social.coves.richtext.markup",
+                "social.coves.richtext.mention",
+                "social.coves.richtext.link"
+              ]
+            }
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 300,
+            "description": "Optional title"
+          },
+          "hashtags": {
+            "type": "array",
+            "maxLength": 20,
+            "description": "Hashtags from the original post",
+            "items": {
+              "type": "string",
+              "maxLength": 100
+            }
+          },
+          "mentions": {
+            "type": "array",
+            "description": "User mentions in the post",
+            "items": {
+              "type": "ref",
+              "ref": "social.coves.richtext.mention"
+            }
+          },
+          "embed": {
+            "type": "union",
+            "description": "Embedded content (images, videos, links, quoted posts)",
+            "refs": [
+              "social.coves.embed.image",
+              "social.coves.embed.video", 
+              "social.coves.embed.external",
+              "social.coves.embed.post"
+            ]
+          },
+          "contentLabels": {
+            "type": "array",
+            "description": "Content warnings and labels",
+            "items": {
+              "type": "string",
+              "knownValues": ["nsfw", "spoiler", "violence"],
+              "maxLength": 32
+            }
+          },
+          "federatedFrom": {
+            "type": "ref",
+            "ref": "social.coves.federation.post",
+            "description": "Required - reference to original federated post"
+          },
+          "originalAuthor": {
+            "type": "object",
+            "description": "Information about the original author from federated platform",
+            "required": ["handle"],
+            "properties": {
+              "handle": {
+                "type": "string",
+                "maxLength": 253,
+                "description": "Original author's handle"
+              },
+              "displayName": {
+                "type": "string",
+                "maxLength": 640,
+                "description": "Original author's display name"
+              },
+              "did": {
+                "type": "string",
+                "format": "did",
+                "description": "Original author's DID (if available)"
+              },
+              "avatar": {
+                "type": "string",
+                "format": "uri",
+                "description": "URL to original author's avatar"
+              }
+            }
+          },
+          "replyTo": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "If this is a reply, reference to the parent post"
+          },
+          "location": {
+            "type": "ref",
+            "ref": "social.coves.actor.profile#geoLocation"
+          },
+          "language": {
+            "type": "string",
+            "maxLength": 10,
+            "description": "Language code (e.g., 'en', 'es', 'fr')"
+          },
+          "crosspostOf": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "If this is a crosspost, AT-URI of the post this is a crosspost of"
+          },
+          "crosspostChain": {
+            "type": "array",
+            "description": "Array of AT-URIs of all posts in the crosspost chain (including this one)",
+            "items": {
+              "type": "string",
+              "format": "at-uri"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime"
+          },
+          "originalCreatedAt": {
+            "type": "string",
+            "format": "datetime",
+            "description": "Original creation time on the federated platform"
+          }
+        }
+      }
+    }
+  }
+}
