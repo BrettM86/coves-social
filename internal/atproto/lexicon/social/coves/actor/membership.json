@@ -8,7 +8,7 @@
       "key": "tid",
       "record": {
         "type": "object",
-        "required": ["community", "reputation", "joinedAt", "createdAt"],
+        "required": ["community", "reputation", "createdAt", "createdAt"],
         "properties": {
           "community": {
             "type": "string",
