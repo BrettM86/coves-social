@@ -59,22 +59,25 @@
       "type": "object",
       "description": "Allowed post types in the community",
       "properties": {
-        "textOnly": {
+        "allowText": {
           "type": "boolean",
-          "default": false,
-          "description": "Restrict to text posts only"
+          "default": true,
+          "description": "Allow text posts"
         },
         "allowVideo": {
           "type": "boolean",
-          "default": true
+          "default": true,
+          "description": "Allow video posts"
         },
         "allowImage": {
           "type": "boolean",
-          "default": true
+          "default": true,
+          "description": "Allow image posts"
         },
         "allowArticle": {
           "type": "boolean",
-          "default": true
+          "default": true,
+          "description": "Allow Article posts"
         }
       }
     },
@@ -130,13 +133,13 @@
         "tagThreshold": {
           "type": "integer",
           "minimum": 1,
-          "default": 5,
+          "default": 15,
           "description": "Number of tags needed to trigger action"
         },
         "tribunalThreshold": {
           "type": "integer",
           "minimum": 1,
-          "default": 3,
+          "default": 50,
           "description": "Number of tags to trigger tribunal review"
         },
         "jurySize": {
@@ -144,6 +147,38 @@
           "minimum": 9,
           "default": 9,
           "description": "Number of jurors for tribunal"
+        }
+      }
+    },
+    "rule": {
+      "type": "object",
+      "description": "A text-based community rule for display purposes",
+      "required": ["title", "description", "createdAt", "isActive"],
+      "properties": {
+        "title": {
+          "type": "string",
+          "maxLength": 256,
+          "description": "Short rule title (e.g., 'No Editorialized Titles')"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 2000,
+          "description": "Detailed explanation of the rule"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "datetime",
+          "description": "When the rule was created"
+        },
+        "isActive": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether the rule is currently active"
+        },
+        "disabledAt": {
+          "type": "string",
+          "format": "datetime",
+          "description": "When the rule was disabled (optional)"
         }
       }
     }

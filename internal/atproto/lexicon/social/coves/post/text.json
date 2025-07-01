@@ -74,6 +74,19 @@
               "social.coves.embed.post"
             ]
           },
+          "crosspostOf": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "If this is a crosspost, AT-URI of the post this is a crosspost of"
+          },
+          "crosspostChain": {
+            "type": "array",
+            "description": "Array of AT-URIs of all posts in the crosspost chain (including this one)",
+            "items": {
+              "type": "string",
+              "format": "at-uri"
+            }
+          },
           "createdAt": {
             "type": "string",
             "format": "datetime"

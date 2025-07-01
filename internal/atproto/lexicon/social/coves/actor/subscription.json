@@ -17,7 +17,8 @@
           },
           "createdAt": {
             "type": "string",
-            "format": "datetime"
+            "format": "datetime",
+            "description": "When the subscription started"
           },
           "endedAt": {
             "type": "string",

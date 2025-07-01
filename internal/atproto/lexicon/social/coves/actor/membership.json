@@ -4,7 +4,7 @@
   "defs": {
     "main": {
       "type": "record",
-      "description": "Membership in a community (has reputation)",
+      "description": "Membership in a community",
       "key": "tid",
       "record": {
         "type": "object",
@@ -21,15 +21,10 @@
             "default": 0,
             "description": "Reputation score within the community"
           },
-          "subscribedAt": {
-            "type": "string",
-            "format": "datetime",
-            "description": "When the user subscribed to a community"
-          },
           "createdAt": {
             "type": "string",
             "format": "datetime",
-            "description": "When the user was created"
+            "description": "When the user's membership started"
           },
           "endedAt": {
             "type": "string",
