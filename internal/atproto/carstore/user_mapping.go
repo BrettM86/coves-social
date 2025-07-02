@@ -11,17 +11,17 @@ import (
 
 // UserMapping manages the mapping between DIDs and numeric UIDs required by Indigo's carstore
 type UserMapping struct {
-	db        *gorm.DB
-	mu        sync.RWMutex
-	didToUID  map[string]models.Uid
-	uidToDID  map[models.Uid]string
-	nextUID   models.Uid
+	db       *gorm.DB
+	mu       sync.RWMutex
+	didToUID map[string]models.Uid
+	uidToDID map[models.Uid]string
+	nextUID  models.Uid
 }
 
 // UserMap represents the database model for DID to UID mapping
 type UserMap struct {
 	UID       models.Uid `gorm:"primaryKey;autoIncrement"`
-	DID       string     `gorm:"uniqueIndex;not null"`
+	DID       string     `gorm:"column:did;uniqueIndex;not null"`
 	CreatedAt int64
 	UpdatedAt int64
 }
@@ -30,7 +30,7 @@ type UserMap struct {
 func NewUserMapping(db *gorm.DB) (*UserMapping, error) {
 	// Auto-migrate the user mapping table
 	if err := db.AutoMigrate(&UserMap{}); err != nil {
-		return nil, fmt.Errorf("failed to migrate user mapping table: %w", err)
+		return nil, fmt.Errorf("migrating user mapping table: %w", err)
 	}
 
 	um := &UserMapping{
@@ -42,7 +42,7 @@ func NewUserMapping(db *gorm.DB) (*UserMapping, error) {
 
 	// Load existing mappings
 	if err := um.loadMappings(); err != nil {
-		return nil, fmt.Errorf("failed to load user mappings: %w", err)
+		return nil, fmt.Errorf("loading user mappings: %w", err)
 	}
 
 	return um, nil
@@ -52,7 +52,7 @@ func NewUserMapping(db *gorm.DB) (*UserMapping, error) {
 func (um *UserMapping) loadMappings() error {
 	var mappings []UserMap
 	if err := um.db.Find(&mappings).Error; err != nil {
-		return err
+		return fmt.Errorf("querying user mappings: %w", err)
 	}
 
 	um.mu.Lock()
@@ -93,7 +93,7 @@ func (um *UserMapping) GetOrCreateUID(ctx context.Context, did string) (models.U
 	}
 
 	if err := um.db.Create(userMap).Error; err != nil {
-		return 0, fmt.Errorf("failed to create user mapping: %w", err)
+		return 0, fmt.Errorf("creating user mapping for DID %s: %w", did, err)
 	}
 
 	um.didToUID[did] = userMap.UID

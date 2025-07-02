@@ -46,7 +46,7 @@ func main() {
 	}
 
 	r := chi.NewRouter()
-	
+
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.RequestID)
@@ -56,7 +56,7 @@ func main() {
 		Conn: db,
 	}), &gorm.Config{
 		DisableForeignKeyConstraintWhenMigrating: true,
-		PrepareStmt: false,
+		PrepareStmt:                              true, // Enable prepared statements for better performance
 	})
 	if err != nil {
 		log.Fatal("Failed to initialize GORM:", err)
@@ -65,14 +65,14 @@ func main() {
 	// Initialize repositories
 	userRepo := postgresRepo.NewUserRepository(db)
 	_ = users.NewUserService(userRepo) // TODO: Use when UserRoutes is fixed
-	
+
 	// Initialize carstore for ATProto repository storage
 	carDirs := []string{"./data/carstore"}
 	repoStore, err := carstore.NewRepoStore(gormDB, carDirs)
 	if err != nil {
 		log.Fatal("Failed to initialize repo store:", err)
 	}
-	
+
 	repositoryRepo := postgresRepo.NewRepositoryRepo(db)
 	repositoryService := repository.NewService(repositoryRepo, repoStore)
 

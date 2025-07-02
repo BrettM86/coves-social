@@ -1,10 +1,15 @@
 -- +goose Up
 -- +goose StatementBegin
 
+-- WARNING: This migration removes blob storage tables. 
+-- Ensure all blob data has been migrated to carstore before running this migration.
+-- This migration is NOT reversible if blob data exists!
+
 -- Remove the value column from records table since blocks are now stored in filesystem
 ALTER TABLE records DROP COLUMN IF EXISTS value;
 
 -- Drop blob-related tables since FileCarStore handles block storage
+-- WARNING: This will permanently delete all blob data!
 DROP TABLE IF EXISTS blob_refs;
 DROP TABLE IF EXISTS blobs;
 

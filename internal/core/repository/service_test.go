@@ -10,7 +10,7 @@ import (
 	"Coves/internal/atproto/carstore"
 	"Coves/internal/core/repository"
 	"Coves/internal/db/postgres"
-	
+
 	"github.com/ipfs/go-cid"
 	_ "github.com/lib/pq"
 	"github.com/pressly/goose/v3"
@@ -44,7 +44,7 @@ func setupTestDB(t *testing.T) (*sql.DB, *gorm.DB, func()) {
 	// Connect with GORM using a fresh connection
 	gormDB, err := gorm.Open(postgresDriver.Open(dbURL), &gorm.Config{
 		DisableForeignKeyConstraintWhenMigrating: true,
-		PrepareStmt: false,
+		PrepareStmt:                              false,
 	})
 	if err != nil {
 		t.Fatalf("Failed to create GORM connection: %v", err)
@@ -58,6 +58,14 @@ func setupTestDB(t *testing.T) (*sql.DB, *gorm.DB, func()) {
 		gormDB.Exec("DELETE FROM records")
 		gormDB.Exec("DELETE FROM user_maps")
 		gormDB.Exec("DELETE FROM car_shards")
+		gormDB.Exec("DELETE FROM block_refs")
+
+		// Close GORM connection
+		if sqlGormDB, err := gormDB.DB(); err == nil {
+			sqlGormDB.Close()
+		}
+
+		// Close original SQL connection
 		sqlDB.Close()
 	}
 
@@ -88,7 +96,7 @@ func TestRepositoryService_CreateRepository(t *testing.T) {
 
 	// Test DID
 	testDID := "did:plc:testuser123"
-	
+
 	// Set signing key
 	service.SetSigningKey(testDID, &mockSigningKey{})
 
@@ -135,7 +143,7 @@ func TestRepositoryService_ImportExport(t *testing.T) {
 		t.Fatalf("Failed to create temp dir: %v", err)
 	}
 	defer os.RemoveAll(tempDir)
-	
+
 	// Log the temp directory for debugging
 	t.Logf("Using carstore directory: %s", tempDir)
 
@@ -158,16 +166,16 @@ func TestRepositoryService_ImportExport(t *testing.T) {
 		t.Fatalf("Failed to create repository 1: %v", err)
 	}
 	t.Logf("Created repository with HeadCID: %s", repo1.HeadCID)
-	
+
 	// Check what's in the database
 	var userMapCount int
 	gormDB.Raw("SELECT COUNT(*) FROM user_maps").Scan(&userMapCount)
 	t.Logf("User maps count: %d", userMapCount)
-	
+
 	var carShardCount int
 	gormDB.Raw("SELECT COUNT(*) FROM car_shards").Scan(&carShardCount)
 	t.Logf("Car shards count: %d", carShardCount)
-	
+
 	// Check block_refs too
 	var blockRefCount int
 	gormDB.Raw("SELECT COUNT(*) FROM block_refs").Scan(&blockRefCount)
@@ -333,7 +341,7 @@ func TestUserMapping(t *testing.T) {
 func TestRepositoryService_MockedComponents(t *testing.T) {
 	// Use the existing mock repository from the old test file
 	_ = NewMockRepositoryRepository()
-	
+
 	// For unit testing without real carstore, we would need to mock RepoStore
 	// For now, this demonstrates the structure
 	t.Skip("Mocked carstore tests would require creating mock RepoStore interface")

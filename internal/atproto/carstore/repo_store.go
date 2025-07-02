@@ -22,13 +22,13 @@ func NewRepoStore(db *gorm.DB, carDirs []string) (*RepoStore, error) {
 	// Create carstore
 	cs, err := NewCarStore(db, carDirs)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create carstore: %w", err)
+		return nil, fmt.Errorf("creating carstore: %w", err)
 	}
 
 	// Create user mapping
 	mapping, err := NewUserMapping(db)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create user mapping: %w", err)
+		return nil, fmt.Errorf("creating user mapping: %w", err)
 	}
 
 	return &RepoStore{
@@ -41,15 +41,15 @@ func NewRepoStore(db *gorm.DB, carDirs []string) (*RepoStore, error) {
 func (rs *RepoStore) ImportRepo(ctx context.Context, did string, carData io.Reader) (cid.Cid, error) {
 	uid, err := rs.mapping.GetOrCreateUID(ctx, did)
 	if err != nil {
-		return cid.Undef, fmt.Errorf("failed to get UID for DID %s: %w", did, err)
+		return cid.Undef, fmt.Errorf("getting UID for DID %s: %w", did, err)
 	}
 
 	// Read all data from the reader
 	data, err := io.ReadAll(carData)
 	if err != nil {
-		return cid.Undef, fmt.Errorf("failed to read CAR data: %w", err)
+		return cid.Undef, fmt.Errorf("reading CAR data: %w", err)
 	}
-	
+
 	return rs.cs.ImportSlice(ctx, uid, nil, data)
 }
 
@@ -57,13 +57,13 @@ func (rs *RepoStore) ImportRepo(ctx context.Context, did string, carData io.Read
 func (rs *RepoStore) ReadRepo(ctx context.Context, did string, sinceRev string) ([]byte, error) {
 	uid, err := rs.mapping.GetUID(did)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get UID for DID %s: %w", did, err)
+		return nil, fmt.Errorf("getting UID for DID %s: %w", did, err)
 	}
 
 	var buf bytes.Buffer
 	err = rs.cs.ReadUserCar(ctx, uid, sinceRev, false, &buf)
 	if err != nil {
-		return nil, fmt.Errorf("failed to read repo for DID %s: %w", did, err)
+		return nil, fmt.Errorf("reading repo for DID %s: %w", did, err)
 	}
 
 	return buf.Bytes(), nil
@@ -73,7 +73,7 @@ func (rs *RepoStore) ReadRepo(ctx context.Context, did string, sinceRev string) 
 func (rs *RepoStore) GetRepoHead(ctx context.Context, did string) (cid.Cid, error) {
 	uid, err := rs.mapping.GetUID(did)
 	if err != nil {
-		return cid.Undef, fmt.Errorf("failed to get UID for DID %s: %w", did, err)
+		return cid.Undef, fmt.Errorf("getting UID for DID %s: %w", did, err)
 	}
 
 	return rs.cs.GetUserRepoHead(ctx, uid)
@@ -83,7 +83,7 @@ func (rs *RepoStore) GetRepoHead(ctx context.Context, did string) (cid.Cid, erro
 func (rs *RepoStore) CompactRepo(ctx context.Context, did string) error {
 	uid, err := rs.mapping.GetUID(did)
 	if err != nil {
-		return fmt.Errorf("failed to get UID for DID %s: %w", did, err)
+		return fmt.Errorf("getting UID for DID %s: %w", did, err)
 	}
 
 	return rs.cs.CompactUserShards(ctx, uid, false)
@@ -93,7 +93,7 @@ func (rs *RepoStore) CompactRepo(ctx context.Context, did string) error {
 func (rs *RepoStore) DeleteRepo(ctx context.Context, did string) error {
 	uid, err := rs.mapping.GetUID(did)
 	if err != nil {
-		return fmt.Errorf("failed to get UID for DID %s: %w", did, err)
+		return fmt.Errorf("getting UID for DID %s: %w", did, err)
 	}
 
 	return rs.cs.WipeUserData(ctx, uid)

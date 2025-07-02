@@ -9,14 +9,13 @@ import (
 
 	"Coves/internal/atproto/carstore"
 	"github.com/ipfs/go-cid"
-	"github.com/multiformats/go-multihash"
 )
 
 // Service implements the RepositoryService interface using Indigo's carstore
 type Service struct {
-	repo         RepositoryRepository
-	repoStore    *carstore.RepoStore
-	signingKeys  map[string]interface{} // DID -> signing key
+	repo        RepositoryRepository
+	repoStore   *carstore.RepoStore
+	signingKeys map[string]interface{} // DID -> signing key
 }
 
 // NewService creates a new repository service using carstore
@@ -38,7 +37,7 @@ func (s *Service) CreateRepository(did string) (*Repository, error) {
 	// Check if repository already exists
 	existing, err := s.repo.GetByDID(did)
 	if err != nil {
-		return nil, fmt.Errorf("failed to check existing repository: %w", err)
+		return nil, fmt.Errorf("checking existing repository: %w", err)
 	}
 	if existing != nil {
 		return nil, fmt.Errorf("repository already exists for DID: %s", did)
@@ -47,23 +46,19 @@ func (s *Service) CreateRepository(did string) (*Repository, error) {
 	// For now, just create the user mapping without importing CAR data
 	// The actual repository data will be created when records are added
 	ctx := context.Background()
-	
+
 	// Ensure user mapping exists
 	_, err = s.repoStore.GetOrCreateUID(ctx, did)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create user mapping: %w", err)
+		return nil, fmt.Errorf("creating user mapping: %w", err)
 	}
-	
 
-	// Create a placeholder CID for the empty repository
-	emptyData := []byte("empty")
-	mh, _ := multihash.Sum(emptyData, multihash.SHA2_256, -1)
-	placeholderCID := cid.NewCidV1(cid.Raw, mh)
+	// Use placeholder CID for the empty repository
 
 	// Create repository record
 	repository := &Repository{
 		DID:         did,
-		HeadCID:     placeholderCID,
+		HeadCID:     PlaceholderCID,
 		Revision:    "rev-0",
 		RecordCount: 0,
 		StorageSize: 0,
@@ -73,7 +68,7 @@ func (s *Service) CreateRepository(did string) (*Repository, error) {
 
 	// Save to database
 	if err := s.repo.Create(repository); err != nil {
-		return nil, fmt.Errorf("failed to save repository: %w", err)
+		return nil, fmt.Errorf("saving repository: %w", err)
 	}
 
 	return repository, nil
@@ -83,7 +78,7 @@ func (s *Service) CreateRepository(did string) (*Repository, error) {
 func (s *Service) GetRepository(did string) (*Repository, error) {
 	repo, err := s.repo.GetByDID(did)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get repository: %w", err)
+		return nil, fmt.Errorf("getting repository: %w", err)
 	}
 	if repo == nil {
 		return nil, fmt.Errorf("repository not found for DID: %s", did)
@@ -102,12 +97,12 @@ func (s *Service) GetRepository(did string) (*Repository, error) {
 func (s *Service) DeleteRepository(did string) error {
 	// Delete from carstore
 	if err := s.repoStore.DeleteRepo(context.Background(), did); err != nil {
-		return fmt.Errorf("failed to delete repo from carstore: %w", err)
+		return fmt.Errorf("deleting repo from carstore: %w", err)
 	}
 
 	// Delete from database
 	if err := s.repo.Delete(did); err != nil {
-		return fmt.Errorf("failed to delete repository: %w", err)
+		return fmt.Errorf("deleting repository from database: %w", err)
 	}
 
 	return nil
@@ -118,7 +113,7 @@ func (s *Service) ExportRepository(did string) ([]byte, error) {
 	// First check if repository exists in our database
 	repo, err := s.repo.GetByDID(did)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get repository: %w", err)
+		return nil, fmt.Errorf("getting repository: %w", err)
 	}
 	if repo == nil {
 		return nil, fmt.Errorf("repository not found for DID: %s", did)
@@ -132,10 +127,10 @@ func (s *Service) ExportRepository(did string) ([]byte, error) {
 		// Check for the specific error pattern from Indigo's carstore
 		errMsg := err.Error()
 		if strings.Contains(errMsg, "no data found for user") ||
-		   strings.Contains(errMsg, "user not found") {
+			strings.Contains(errMsg, "user not found") {
 			return []byte{}, nil
 		}
-		return nil, fmt.Errorf("failed to export repository: %w", err)
+		return nil, fmt.Errorf("exporting repository: %w", err)
 	}
 
 	return carData, nil
@@ -144,19 +139,17 @@ func (s *Service) ExportRepository(did string) ([]byte, error) {
 // ImportRepository imports a repository from a CAR file
 func (s *Service) ImportRepository(did string, carData []byte) error {
 	ctx := context.Background()
-	
+
 	// If empty CAR data, just create user mapping
 	if len(carData) == 0 {
 		_, err := s.repoStore.GetOrCreateUID(ctx, did)
 		if err != nil {
-			return fmt.Errorf("failed to create user mapping: %w", err)
+			return fmt.Errorf("creating user mapping: %w", err)
 		}
-		
-		// Create placeholder CID
-		emptyData := []byte("empty")
-		mh, _ := multihash.Sum(emptyData, multihash.SHA2_256, -1)
-		headCID := cid.NewCidV1(cid.Raw, mh)
-		
+
+		// Use placeholder CID for empty repository
+		headCID := PlaceholderCID
+
 		// Create repository record
 		repo := &Repository{
 			DID:         did,
@@ -168,21 +161,21 @@ func (s *Service) ImportRepository(did string, carData []byte) error {
 			UpdatedAt:   time.Now(),
 		}
 		if err := s.repo.Create(repo); err != nil {
-			return fmt.Errorf("failed to create repository: %w", err)
+			return fmt.Errorf("creating repository: %w", err)
 		}
 		return nil
 	}
-	
+
 	// Import non-empty CAR into carstore
 	headCID, err := s.repoStore.ImportRepo(ctx, did, bytes.NewReader(carData))
 	if err != nil {
-		return fmt.Errorf("failed to import repository: %w", err)
+		return fmt.Errorf("importing repository: %w", err)
 	}
 
 	// Create or update repository record
 	repo, err := s.repo.GetByDID(did)
 	if err != nil {
-		return fmt.Errorf("failed to get repository: %w", err)
+		return fmt.Errorf("getting repository: %w", err)
 	}
 
 	if repo == nil {
@@ -197,14 +190,14 @@ func (s *Service) ImportRepository(did string, carData []byte) error {
 			UpdatedAt:   time.Now(),
 		}
 		if err := s.repo.Create(repo); err != nil {
-			return fmt.Errorf("failed to create repository: %w", err)
+			return fmt.Errorf("creating repository: %w", err)
 		}
 	} else {
 		// Update existing repository
 		repo.HeadCID = headCID
 		repo.UpdatedAt = time.Now()
 		if err := s.repo.Update(repo); err != nil {
-			return fmt.Errorf("failed to update repository: %w", err)
+			return fmt.Errorf("updating repository: %w", err)
 		}
 	}
 
