@@ -21,7 +21,7 @@ import (
 func setupTestDB(t *testing.T) *sql.DB {
 	dbURL := os.Getenv("TEST_DATABASE_URL")
 	if dbURL == "" {
-		dbURL = "postgres://dev_user:dev_password@localhost:5433/coves_dev?sslmode=disable"
+		dbURL = "postgres://test_user:test_password@localhost:5434/coves_test?sslmode=disable"
 	}
 
 	db, err := sql.Open("postgres", dbURL)

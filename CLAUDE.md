@@ -19,6 +19,9 @@ Utilize existing tech stack
 - DB: PostgreSQL
 - atProto for federation & user identities
 
+## atProto Guidelines 
+- Attempt to utilize bsky built indigo packages before building atProto layer functions from scratch  
+
 # Architecture Guidelines
 
 ## Required Layered Architecture
