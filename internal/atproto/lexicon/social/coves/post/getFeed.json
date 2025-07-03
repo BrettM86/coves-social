@@ -1,0 +1,128 @@
+{
+  "lexicon": 1,
+  "id": "social.coves.post.getFeed",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Get a feed of posts",
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "feed": {
+            "type": "string",
+            "enum": ["home", "popular", "new", "controversial"],
+            "default": "home",
+            "description": "Type of feed to retrieve"
+          },
+          "community": {
+            "type": "string",
+            "format": "at-identifier",
+            "description": "Filter by specific community (DID or handle)"
+          },
+          "timeframe": {
+            "type": "string",
+            "enum": ["hour", "day", "week", "month", "year", "all"],
+            "default": "day",
+            "description": "Timeframe for popular/controversial feeds"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 25
+          },
+          "cursor": {
+            "type": "string"
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["posts"],
+          "properties": {
+            "posts": {
+              "type": "array",
+              "items": {
+                "type": "ref",
+                "ref": "#feedPost"
+              }
+            },
+            "cursor": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "feedPost": {
+      "type": "object",
+      "required": ["uri", "author", "community", "type", "createdAt"],
+      "properties": {
+        "uri": {
+          "type": "string",
+          "format": "at-uri"
+        },
+        "author": {
+          "type": "ref",
+          "ref": "social.coves.post.get#authorView"
+        },
+        "community": {
+          "type": "ref",
+          "ref": "social.coves.post.get#communityRef"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["text", "image", "video", "article", "microblog"]
+        },
+        "title": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string",
+          "maxLength": 500,
+          "description": "Truncated preview of the post text"
+        },
+        "images": {
+          "type": "array",
+          "maxLength": 4,
+          "description": "Preview of images (max 4)",
+          "items": {
+            "type": "ref",
+            "ref": "social.coves.post.get#imageView"
+          }
+        },
+        "video": {
+          "type": "ref",
+          "ref": "social.coves.post.get#videoView"
+        },
+        "external": {
+          "type": "ref",
+          "ref": "social.coves.post.get#externalView"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "nsfw": {
+          "type": "boolean"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "stats": {
+          "type": "ref",
+          "ref": "social.coves.post.get#postStats"
+        },
+        "viewer": {
+          "type": "ref",
+          "ref": "social.coves.post.get#viewerState"
+        }
+      }
+    }
+  }
+}
