@@ -1,5 +1,5 @@
 Project:
-You are a distinguished developer helping build Coves, a forum like atProto social media platform (think reddit).
+You are a distinguished developer helping build Coves, a forum like atProto social media platform (think reddit / lemmy).
 
 Human & LLM Readability Guidelines:
 - Clear Module Boundaries: Each feature is a self-contained module with explicit interfaces
@@ -19,88 +19,55 @@ Utilize existing tech stack
 - DB: PostgreSQL
 - atProto for federation & user identities
 
-## atProto Guidelines 
-- Attempt to utilize bsky built indigo packages before building atProto layer functions from scratch  
+## atProto Guidelines
+
+For comprehensive AT Protocol implementation details, see [ATPROTO_GUIDE.md](./ATPROTO_GUIDE.md).
+
+Key principles:
+- Utilize Bluesky's Indigo packages before building custom atProto functionality
+- Everything is XRPC - no separate REST API layer needed
+- Follow the two-database pattern: Repository (CAR files) and AppView (PostgreSQL)
+- Design for federation and data portability from the start
 
 # Architecture Guidelines
 
 ## Required Layered Architecture
 Follow this strict separation of concerns:
 ```
-Handler (HTTP) → Service (Business Logic) → Repository (Data Access) → Database
+Handler (XRPC) → Service (Business Logic) → Repository (Data Access) → Database
 ```
+- Handlers: XRPC request/response only
+- Services: Business logic, uses both write/read repos
+- Write Repos: CAR store operations
+- Read Repos: AppView queries
+
 
 ## Directory Structure
-```
-internal/
-├── api/
-│   ├── handlers/     # HTTP request/response handling ONLY
-│   └── routes/       # Route definitions
-├── core/
-│   └── [domain]/     # Business logic, domain models, service interfaces
-│       ├── service.go     # Business logic implementation
-│       ├── repository.go  # Data access interface
-│       └── [domain].go    # Domain models
-└── db/
-    └── postgres/     # Database implementation details
-        └── [domain]_repo.go  # Repository implementations
-```
+
+For a detailed project structure with file-level details and implementation status, see [PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md).
+
+The project follows a layered architecture with clear separation between:
+- **XRPC handlers** - atProto API layer
+  - Only handle XRPC concerns: parsing requests, formatting responses
+  - Delegate all business logic to services
+  - No direct database access
+- **Core business logic** - Domain services and models  
+  - Contains all business logic
+  - Orchestrates between write and read repositories
+  - Manages transactions and complex operations
+- **Data repositories** - Split between CAR store writes and AppView reads
+  - **Write Repositories** (`internal/atproto/carstore/*_write_repo.go`)
+      - Modify CAR files (source of truth)
+- **Read Repositories** (`db/appview/*_read_repo.go`)
+  - Query denormalized PostgreSQL tables
+  - Optimized for performance
 
 ## Strict Prohibitions
 - **NEVER** put SQL queries in handlers
 - **NEVER** import database packages in handlers
 - **NEVER** pass *sql.DB directly to handlers
-- **NEVER** mix business logic with HTTP concerns
+- **NEVER** mix business logic with XRPC concerns
 - **NEVER** bypass the service layer
-
-## Required Patterns
-
-### Handlers (HTTP Layer)
-- Only handle HTTP concerns: parsing requests, formatting responses
-- Delegate all business logic to services
-- No direct database access
-
-Example:
-```go
-func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
-    var req CreateUserRequest
-    json.NewDecoder(r.Body).Decode(&req)
-    
-    user, err := h.userService.CreateUser(req)  // Delegate to service
-    // Handle response formatting only
-}
-```
-
-### Services (Business Layer)
-- Contain all business logic and validation
-- Use repository interfaces, never concrete implementations
-- Handle transactions and complex operations
-
-Example:
-```go
-type UserService struct {
-    userRepo UserRepository  // Interface, not concrete type
-}
-```
-
-### Repositories (Data Layer)
-- Define interfaces in core/[domain]/
-- Implement in db/postgres/
-- Handle all SQL queries and database operations
-
-Example:
-```go
-// Interface in core/users/repository.go
-type UserRepository interface {
-    Create(user User) (*User, error)
-    GetByID(id int) (*User, error)
-}
-
-// Implementation in db/postgres/user_repo.go
-type PostgresUserRepo struct {
-    db *sql.DB
-}
-```
 
 ## Testing Requirements
 - Services must be easily mockable (use interfaces)
@@ -119,7 +86,7 @@ When creating new features:
 2. Generate test file with failing tests
 3. Generate implementation to pass tests
 4. Generate handler with tests
-5. Update routes in api/routes/
+5. Update routes in xrpc/routes/
 
 ### Refactoring Checklist
 Before considering a feature complete:
@@ -135,8 +102,6 @@ Before considering a feature complete:
 - Never modify existing migrations
 - Always provide rollback migrations
 
-
-
 ## Dependency Injection
 - Use constructor functions for all components
 - Pass interfaces, not concrete types
@@ -145,9 +110,10 @@ Before considering a feature complete:
 Example dependency wiring:
 ```go
 // main.go
-userRepo := postgres.NewUserRepository(db)
-userService := users.NewUserService(userRepo)
-userHandler := handlers.NewUserHandler(userService)
+userWriteRepo := carstore.NewUserWriteRepository(carStore)
+userReadRepo := appview.NewUserReadRepository(db)
+userService := users.NewUserService(userWriteRepo, userReadRepo)
+userHandler := xrpc.NewUserHandler(userService)
 ```
 
 ## Error Handling
@@ -157,7 +123,17 @@ userHandler := handlers.NewUserHandler(userService)
 - Never expose internal error details in API responses
 
 ### Context7 Usage Guidelines:
-- Always check Context7 for best practices before implementing external integrations
+- Always check Context7 for best practices before implementing external integrations and packages
 - Use Context7 to understand proper error handling patterns for specific libraries
 - Reference Context7 for testing patterns with external dependencies
 - Consult Context7 for proper configuration patterns
+
+## XRPC Implementation
+
+For detailed XRPC patterns and Lexicon examples, see [ATPROTO_GUIDE.md](./ATPROTO_GUIDE.md#xrpc).
+
+### Key Points
+- All client interactions go through XRPC endpoints
+- Handlers validate against Lexicon schemas automatically
+- Queries are read-only, procedures modify repositories
+- Every endpoint must have a corresponding Lexicon definition
