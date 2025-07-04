@@ -9,7 +9,7 @@
         "encoding": "application/json",
         "schema": {
           "type": "object",
-          "required": ["community", "type"],
+          "required": ["community", "type", "title"],
           "properties": {
             "community": {
               "type": "string",
@@ -30,7 +30,7 @@
             "text": {
               "type": "string",
               "maxGraphemes": 10000,
-              "maxLength": 100000,
+              "maxLength": 40000,
               "description": "Post body text"
             },
             "textMarkup": {

@@ -44,6 +44,10 @@
               "type": "string",
               "format": "cid",
               "description": "CID of the created saved record"
+            },
+            "existing": {
+              "type": "boolean",
+              "description": "True if item was already saved"
             }
           }
         }
@@ -52,10 +56,6 @@
         {
           "name": "SubjectNotFound",
           "description": "The post or comment to save was not found"
-        },
-        {
-          "name": "AlreadySaved",
-          "description": "Item is already saved"
         }
       ]
     }

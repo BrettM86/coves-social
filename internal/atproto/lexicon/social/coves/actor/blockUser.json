@@ -40,6 +40,10 @@
               "type": "string",
               "format": "cid",
               "description": "CID of the created block record"
+            },
+            "existing": {
+              "type": "boolean",
+              "description": "True if user was already blocked"
             }
           }
         }
@@ -48,10 +52,6 @@
         {
           "name": "SubjectNotFound",
           "description": "Subject user not found"
-        },
-        {
-          "name": "AlreadyBlocked",
-          "description": "User is already blocked"
         }
       ]
     }

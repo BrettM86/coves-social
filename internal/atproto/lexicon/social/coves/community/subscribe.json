@@ -34,6 +34,10 @@
               "type": "string",
               "format": "cid",
               "description": "CID of the created subscription record"
+            },
+            "existing": {
+              "type": "boolean",
+              "description": "True if item was already subscribed"
             }
           }
         }
@@ -42,10 +46,6 @@
         {
           "name": "CommunityNotFound",
           "description": "Community not found"
-        },
-        {
-          "name": "AlreadySubscribed",
-          "description": "Already subscribed to this community"
         },
         {
           "name": "Blocked",

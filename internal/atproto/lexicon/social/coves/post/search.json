@@ -49,7 +49,7 @@
             "type": "integer",
             "minimum": 1,
             "maximum": 100,
-            "default": 25
+            "default": 50
           },
           "cursor": {
             "type": "string"
