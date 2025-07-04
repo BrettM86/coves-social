@@ -3,7 +3,7 @@
   "id": "social.coves.actor.getSaved",
   "defs": {
     "main": {
-      "type": "procedure",
+      "type": "query",
       "description": "Get all saved posts and comments for the authenticated user",
       "input": {
         "encoding": "application/json",

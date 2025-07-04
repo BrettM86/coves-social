@@ -1,0 +1,99 @@
+{
+  "lexicon": 1,
+  "id": "social.coves.post.update",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Update an existing post",
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["uri"],
+          "properties": {
+            "uri": {
+              "type": "string",
+              "format": "at-uri",
+              "description": "AT-URI of the post to update"
+            },
+            "title": {
+              "type": "string",
+              "maxGraphemes": 300,
+              "maxLength": 3000,
+              "description": "Updated title"
+            },
+            "text": {
+              "type": "string",
+              "maxGraphemes": 10000,
+              "maxLength": 100000,
+              "description": "Updated body text"
+            },
+            "textMarkup": {
+              "type": "array",
+              "description": "Updated rich text annotations",
+              "items": {
+                "type": "union",
+                "refs": [
+                  "social.coves.richtext.markup",
+                  "social.coves.richtext.mention",
+                  "social.coves.richtext.link"
+                ]
+              }
+            },
+            "tags": {
+              "type": "array",
+              "maxLength": 10,
+              "items": {
+                "type": "string",
+                "maxLength": 50
+              },
+              "description": "Updated tags"
+            },
+            "nsfw": {
+              "type": "boolean",
+              "description": "Updated NSFW status"
+            },
+            "editNote": {
+              "type": "string",
+              "maxLength": 300,
+              "description": "Optional note explaining the edit"
+            }
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["uri", "cid"],
+          "properties": {
+            "uri": {
+              "type": "string",
+              "format": "at-uri",
+              "description": "AT-URI of the updated post"
+            },
+            "cid": {
+              "type": "string",
+              "format": "cid",
+              "description": "New CID of the updated post"
+            }
+          }
+        }
+      },
+      "errors": [
+        {
+          "name": "PostNotFound",
+          "description": "Post not found"
+        },
+        {
+          "name": "NotAuthorized",
+          "description": "User is not authorized to edit this post"
+        },
+        {
+          "name": "EditWindowExpired",
+          "description": "Edit window has expired (posts can only be edited within 24 hours)"
+        }
+      ]
+    }
+  }
+}

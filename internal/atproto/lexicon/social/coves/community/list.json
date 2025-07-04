@@ -1,0 +1,96 @@
+{
+  "lexicon": 1,
+  "id": "social.coves.community.list",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "List communities with various sorting options",
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 50
+          },
+          "cursor": {
+            "type": "string",
+            "description": "Pagination cursor"
+          },
+          "sort": {
+            "type": "string",
+            "enum": ["popular", "active", "new", "alphabetical"],
+            "default": "popular",
+            "description": "Sorting method"
+          },
+          "category": {
+            "type": "string",
+            "description": "Filter by category"
+          },
+          "language": {
+            "type": "string",
+            "format": "language",
+            "description": "Filter by language"
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["communities"],
+          "properties": {
+            "communities": {
+              "type": "array",
+              "items": {
+                "type": "ref",
+                "ref": "#communityView"
+              }
+            },
+            "cursor": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "communityView": {
+      "type": "object",
+      "required": ["did", "profile", "subscriberCount", "postCount"],
+      "properties": {
+        "did": {
+          "type": "string",
+          "format": "did"
+        },
+        "profile": {
+          "type": "ref",
+          "ref": "social.coves.community.profile"
+        },
+        "subscriberCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "memberCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "postCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "viewer": {
+          "type": "object",
+          "properties": {
+            "subscribed": {
+              "type": "boolean"
+            },
+            "member": {
+              "type": "boolean"
+            }
+          }
+        }
+      }
+    }
+  }
+}

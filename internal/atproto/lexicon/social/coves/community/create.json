@@ -1,0 +1,106 @@
+{
+  "lexicon": 1,
+  "id": "social.coves.community.create",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Create a new community",
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["name", "description"],
+          "properties": {
+            "name": {
+              "type": "string",
+              "maxGraphemes": 64,
+              "maxLength": 640,
+              "description": "Community display name"
+            },
+            "description": {
+              "type": "string",
+              "maxGraphemes": 300,
+              "maxLength": 3000,
+              "description": "Community description"
+            },
+            "avatar": {
+              "type": "blob",
+              "accept": ["image/png", "image/jpeg", "image/webp"],
+              "maxSize": 1000000
+            },
+            "banner": {
+              "type": "blob",
+              "accept": ["image/png", "image/jpeg", "image/webp"],
+              "maxSize": 2000000
+            },
+            "rules": {
+              "type": "array",
+              "maxLength": 10,
+              "items": {
+                "type": "string",
+                "maxGraphemes": 200,
+                "maxLength": 2000
+              },
+              "description": "Community rules"
+            },
+            "categories": {
+              "type": "array",
+              "maxLength": 3,
+              "items": {
+                "type": "string",
+                "maxLength": 50
+              },
+              "description": "Community categories for discovery"
+            },
+            "language": {
+              "type": "string",
+              "format": "language",
+              "description": "Primary language of the community"
+            },
+            "membershipThreshold": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000,
+              "default": 100,
+              "description": "Reputation threshold required for membership"
+            }
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["uri", "cid", "did"],
+          "properties": {
+            "uri": {
+              "type": "string",
+              "format": "at-uri",
+              "description": "AT-URI of the created community profile"
+            },
+            "cid": {
+              "type": "string",
+              "format": "cid",
+              "description": "CID of the created community profile"
+            },
+            "did": {
+              "type": "string",
+              "format": "did",
+              "description": "DID of the created community"
+            }
+          }
+        }
+      },
+      "errors": [
+        {
+          "name": "NameTaken",
+          "description": "Community name is already taken"
+        },
+        {
+          "name": "TooManyCommunities",
+          "description": "User has reached the maximum number of communities they can create"
+        }
+      ]
+    }
+  }
+}
