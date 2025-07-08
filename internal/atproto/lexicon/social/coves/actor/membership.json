@@ -8,12 +8,12 @@
       "key": "tid",
       "record": {
         "type": "object",
-        "required": ["community", "reputation", "createdAt", "createdAt"],
+        "required": ["community", "reputation", "createdAt"],
         "properties": {
           "community": {
             "type": "string",
-            "format": "at-uri",
-            "description": "AT-URI of the community (DID-based)"
+            "format": "at-identifier",
+            "description": "DID or handle of the community"
           },
           "reputation": {
             "type": "integer",
