@@ -33,16 +33,12 @@
               "maxLength": 40000,
               "description": "Post body text"
             },
-            "textMarkup": {
+            "textFacets": {
               "type": "array",
               "description": "Rich text annotations for body",
               "items": {
-                "type": "union",
-                "refs": [
-                  "social.coves.richtext.markup",
-                  "social.coves.richtext.mention",
-                  "social.coves.richtext.link"
-                ]
+                "type": "ref",
+                "ref": "social.coves.richtext.facet"
               }
             },
             "images": {

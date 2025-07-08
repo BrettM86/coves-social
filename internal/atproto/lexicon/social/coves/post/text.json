@@ -26,16 +26,12 @@
             "maxLength": 50000,
             "description": "Markdown-formatted post content"
           },
-          "contentMarkup": {
+          "facets": {
             "type": "array",
-            "description": "Rich text annotations for content",
+            "description": "Rich text annotations",
             "items": {
-              "type": "union",
-              "refs": [
-                "social.coves.richtext.markup",
-                "social.coves.richtext.mention",
-                "social.coves.richtext.link"
-              ]
+              "type": "ref",
+              "ref": "social.coves.richtext.facet"
             }
           },
           "tags": {

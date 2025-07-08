@@ -79,7 +79,7 @@ func validateSchemaStructure(catalog *lexicon.BaseCatalog, schemaPath string, ve
 		"social.coves.actor.profile",
 		"social.coves.community.profile",
 		"social.coves.post.text",
-		"social.coves.richtext.markup",
+		"social.coves.richtext.facet",
 	}
 
 	if verbose {

@@ -20,16 +20,12 @@
             "maxLength": 5000,
             "description": "Microblog post content (plain text or markdown)"
           },
-          "contentMarkup": {
+          "facets": {
             "type": "array",
-            "description": "Rich text annotations for content",
+            "description": "Rich text annotations",
             "items": {
-              "type": "union",
-              "refs": [
-                "social.coves.richtext.markup",
-                "social.coves.richtext.mention",
-                "social.coves.richtext.link"
-              ]
+              "type": "ref",
+              "ref": "social.coves.richtext.facet"
             }
           },
           "title": {
@@ -44,14 +40,6 @@
             "items": {
               "type": "string",
               "maxLength": 100
-            }
-          },
-          "mentions": {
-            "type": "array",
-            "description": "User mentions in the post",
-            "items": {
-              "type": "ref",
-              "ref": "social.coves.richtext.mention"
             }
           },
           "embed": {

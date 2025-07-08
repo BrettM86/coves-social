@@ -28,16 +28,12 @@
               "maxLength": 100000,
               "description": "Updated body text"
             },
-            "textMarkup": {
+            "textFacets": {
               "type": "array",
               "description": "Updated rich text annotations",
               "items": {
-                "type": "union",
-                "refs": [
-                  "social.coves.richtext.markup",
-                  "social.coves.richtext.mention",
-                  "social.coves.richtext.link"
-                ]
+                "type": "ref",
+                "ref": "social.coves.richtext.facet"
               }
             },
             "tags": {
