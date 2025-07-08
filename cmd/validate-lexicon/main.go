@@ -109,7 +109,7 @@ func validateSchemaStructure(catalog *lexicon.BaseCatalog, schemaPath string, ve
 func loadSchemasWithDebug(catalog *lexicon.BaseCatalog, schemaPath string, verbose bool) error {
 	var schemaFiles []string
 
-	// Collect all JSON schema filesred
+	// Collect all JSON schema files
 	err := filepath.Walk(schemaPath, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err

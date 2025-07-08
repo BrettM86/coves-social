@@ -28,9 +28,7 @@ func TestLexiconSchemaValidation(t *testing.T) {
 		"social.coves.post.image",
 		"social.coves.post.video",
 		"social.coves.post.article",
-		"social.coves.richtext.markup",
-		"social.coves.richtext.mention",
-		"social.coves.richtext.link",
+		"social.coves.richtext.facet",
 		"social.coves.embed.image",
 		"social.coves.embed.video",
 		"social.coves.embed.external",
@@ -64,7 +62,7 @@ func TestLexiconCrossReferences(t *testing.T) {
 
 	// Test specific cross-references that should work
 	crossRefs := map[string]string{
-		"social.coves.richtext.markup#byteSlice": "byteSlice definition in markup schema",
+		"social.coves.richtext.facet#byteSlice": "byteSlice definition in facet schema",
 		"social.coves.actor.profile#geoLocation": "geoLocation definition in actor profile",
 		"social.coves.community.rules#rule":      "rule definition in community rules",
 	}

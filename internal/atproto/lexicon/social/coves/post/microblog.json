@@ -42,25 +42,6 @@
               "maxLength": 100
             }
           },
-          "mentions": {
-            "type": "array",
-            "description": "User mentions in the post",
-            "items": {
-              "type": "object",
-              "required": ["did"],
-              "properties": {
-                "did": {
-                  "type": "string",
-                  "format": "did",
-                  "description": "DID of the mentioned user"
-                },
-                "handle": {
-                  "type": "string",
-                  "description": "Handle at time of mention"
-                }
-              }
-            }
-          },
           "embed": {
             "type": "union",
             "description": "Embedded content (images, videos, links, quoted posts)",

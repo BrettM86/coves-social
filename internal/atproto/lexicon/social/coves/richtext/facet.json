@@ -48,8 +48,12 @@
     "mention": {
       "type": "object",
       "description": "Facet feature for user or community mentions",
-      "required": ["did"],
+      "required": ["$type", "did"],
       "properties": {
+        "$type": {
+          "type": "string",
+          "const": "social.coves.richtext.facet#mention"
+        },
         "did": {
           "type": "string",
           "format": "did",
@@ -64,8 +68,12 @@
     "link": {
       "type": "object",
       "description": "Facet feature for hyperlinks",
-      "required": ["uri"],
+      "required": ["$type", "uri"],
       "properties": {
+        "$type": {
+          "type": "string",
+          "const": "social.coves.richtext.facet#link"
+        },
         "uri": {
           "type": "string",
           "format": "uri",
@@ -76,22 +84,45 @@
     "bold": {
       "type": "object",
       "description": "Bold text formatting",
-      "properties": {}
+      "required": ["$type"],
+      "properties": {
+        "$type": {
+          "type": "string",
+          "const": "social.coves.richtext.facet#bold"
+        }
+      }
     },
     "italic": {
       "type": "object",
       "description": "Italic text formatting",
-      "properties": {}
+      "required": ["$type"],
+      "properties": {
+        "$type": {
+          "type": "string",
+          "const": "social.coves.richtext.facet#italic"
+        }
+      }
     },
     "strikethrough": {
       "type": "object",
       "description": "Strikethrough text formatting",
-      "properties": {}
+      "required": ["$type"],
+      "properties": {
+        "$type": {
+          "type": "string",
+          "const": "social.coves.richtext.facet#strikethrough"
+        }
+      }
     },
     "spoiler": {
       "type": "object",
       "description": "Hidden/spoiler text that requires user interaction to reveal",
+      "required": ["$type"],
       "properties": {
+        "$type": {
+          "type": "string",
+          "const": "social.coves.richtext.facet#spoiler"
+        },
         "reason": {
           "type": "string",
           "maxLength": 128,
