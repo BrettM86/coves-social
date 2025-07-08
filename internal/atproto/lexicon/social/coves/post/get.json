@@ -64,15 +64,11 @@
         "text": {
           "type": "string"
         },
-        "textMarkup": {
+        "textFacets": {
           "type": "array",
           "items": {
-            "type": "union",
-            "refs": [
-              "social.coves.richtext.markup",
-              "social.coves.richtext.mention",
-              "social.coves.richtext.link"
-            ]
+            "type": "ref",
+            "ref": "social.coves.richtext.facet"
           }
         },
         "images": {

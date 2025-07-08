@@ -1,0 +1,103 @@
+{
+  "lexicon": 1,
+  "id": "social.coves.richtext.facet",
+  "defs": {
+    "main": {
+      "type": "object",
+      "description": "Annotation of a sub-string within rich text",
+      "required": ["index", "features"],
+      "properties": {
+        "index": {
+          "type": "ref",
+          "ref": "#byteSlice"
+        },
+        "features": {
+          "type": "array",
+          "description": "Features applied to this text range",
+          "items": {
+            "type": "union",
+            "refs": [
+              "#mention",
+              "#link", 
+              "#bold",
+              "#italic",
+              "#strikethrough",
+              "#spoiler"
+            ]
+          }
+        }
+      }
+    },
+    "byteSlice": {
+      "type": "object",
+      "description": "Specifies the sub-string range via byte indices",
+      "required": ["byteStart", "byteEnd"],
+      "properties": {
+        "byteStart": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Inclusive start position in UTF-8 bytes"
+        },
+        "byteEnd": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Exclusive end position in UTF-8 bytes"
+        }
+      }
+    },
+    "mention": {
+      "type": "object",
+      "description": "Facet feature for user or community mentions",
+      "required": ["did"],
+      "properties": {
+        "did": {
+          "type": "string",
+          "format": "did",
+          "description": "DID of the mentioned user (@) or community (!)"
+        },
+        "handle": {
+          "type": "string",
+          "description": "Handle at time of mention (may change)"
+        }
+      }
+    },
+    "link": {
+      "type": "object",
+      "description": "Facet feature for hyperlinks",
+      "required": ["uri"],
+      "properties": {
+        "uri": {
+          "type": "string",
+          "format": "uri",
+          "description": "Target URI of the link"
+        }
+      }
+    },
+    "bold": {
+      "type": "object",
+      "description": "Bold text formatting",
+      "properties": {}
+    },
+    "italic": {
+      "type": "object",
+      "description": "Italic text formatting",
+      "properties": {}
+    },
+    "strikethrough": {
+      "type": "object",
+      "description": "Strikethrough text formatting",
+      "properties": {}
+    },
+    "spoiler": {
+      "type": "object",
+      "description": "Hidden/spoiler text that requires user interaction to reveal",
+      "properties": {
+        "reason": {
+          "type": "string",
+          "maxLength": 128,
+          "description": "Optional explanation of what's hidden"
+        }
+      }
+    }
+  }
+}

@@ -79,7 +79,7 @@ func validateSchemaStructure(catalog *lexicon.BaseCatalog, schemaPath string, ve
 		"social.coves.actor.profile",
 		"social.coves.community.profile",
 		"social.coves.post.text",
-		"social.coves.richtext.markup",
+		"social.coves.richtext.facet",
 	}
 
 	if verbose {
@@ -109,7 +109,7 @@ func validateSchemaStructure(catalog *lexicon.BaseCatalog, schemaPath string, ve
 func loadSchemasWithDebug(catalog *lexicon.BaseCatalog, schemaPath string, verbose bool) error {
 	var schemaFiles []string
 
-	// Collect all JSON schema files
+	// Collect all JSON schema filesred
 	err := filepath.Walk(schemaPath, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err

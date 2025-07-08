@@ -36,16 +36,12 @@
             "maxLength": 10000,
             "description": "Optional caption or description"
           },
-          "captionMarkup": {
+          "captionFacets": {
             "type": "array",
             "description": "Rich text annotations for caption",
             "items": {
-              "type": "union",
-              "refs": [
-                "social.coves.richtext.markup",
-                "social.coves.richtext.mention",
-                "social.coves.richtext.link"
-              ]
+              "type": "ref",
+              "ref": "social.coves.richtext.facet"
             }
           },
           "tags": {

@@ -44,16 +44,12 @@
           "maxLength": 10000,
           "description": "Comment text"
         },
-        "markup": {
+        "facets": {
           "type": "array",
           "description": "Rich text annotations",
           "items": {
-            "type": "union",
-            "refs": [
-              "social.coves.richtext.markup",
-              "social.coves.richtext.mention", 
-              "social.coves.richtext.link"
-            ]
+            "type": "ref",
+            "ref": "social.coves.richtext.facet"
           }
         }
       }

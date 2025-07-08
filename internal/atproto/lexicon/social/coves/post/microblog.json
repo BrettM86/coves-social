@@ -20,16 +20,12 @@
             "maxLength": 5000,
             "description": "Microblog post content (plain text or markdown)"
           },
-          "contentMarkup": {
+          "facets": {
             "type": "array",
-            "description": "Rich text annotations for content",
+            "description": "Rich text annotations",
             "items": {
-              "type": "union",
-              "refs": [
-                "social.coves.richtext.markup",
-                "social.coves.richtext.mention",
-                "social.coves.richtext.link"
-              ]
+              "type": "ref",
+              "ref": "social.coves.richtext.facet"
             }
           },
           "title": {
@@ -50,8 +46,19 @@
             "type": "array",
             "description": "User mentions in the post",
             "items": {
-              "type": "ref",
-              "ref": "social.coves.richtext.mention"
+              "type": "object",
+              "required": ["did"],
+              "properties": {
+                "did": {
+                  "type": "string",
+                  "format": "did",
+                  "description": "DID of the mentioned user"
+                },
+                "handle": {
+                  "type": "string",
+                  "description": "Handle at time of mention"
+                }
+              }
             }
           },
           "embed": {

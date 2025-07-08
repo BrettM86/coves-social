@@ -27,16 +27,12 @@
             "maxLength": 2560,
             "description": "User bio with rich text support"
           },
-          "bioMarkup": {
+          "bioFacets": {
             "type": "array",
             "description": "Rich text annotations for bio",
             "items": {
-              "type": "union",
-              "refs": [
-                "social.coves.richtext.markup",
-                "social.coves.richtext.mention",
-                "social.coves.richtext.link"
-              ]
+              "type": "ref",
+              "ref": "social.coves.richtext.facet"
             }
           },
           "avatar": {

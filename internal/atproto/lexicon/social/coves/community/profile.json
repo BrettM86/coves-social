@@ -27,16 +27,12 @@
             "maxLength": 10000,
             "description": "Community description with rich text support"
           },
-          "descriptionMarkup": {
+          "descriptionFacets": {
             "type": "array",
             "description": "Rich text annotations for description",
             "items": {
-              "type": "union",
-              "refs": [
-                "social.coves.richtext.markup",
-                "social.coves.richtext.mention",
-                "social.coves.richtext.link"
-              ]
+              "type": "ref",
+              "ref": "social.coves.richtext.facet"
             }
           },
           "avatar": {
