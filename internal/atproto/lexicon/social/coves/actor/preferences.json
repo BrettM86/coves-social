@@ -38,13 +38,14 @@
       "properties": {
         "defaultFeed": {
           "type": "string",
-          "enum": ["home", "popular", "new"],
+          "enum": ["home", "all"],
           "default": "home"
         },
         "defaultSort": {
           "type": "string",
-          "enum": ["hot", "new", "top", "controversial"],
-          "default": "hot"
+          "enum": ["hot", "new", "top"],
+          "default": "hot",
+          "description": "Default sort order for community feeds"
         },
         "showNSFW": {
           "type": "boolean",

@@ -4,20 +4,26 @@
   "defs": {
     "main": {
       "type": "query",
-      "description": "Get a feed of posts with optional filtering by post type",
+      "description": "Get a feed of posts. Use 'feed' parameter for global feeds (home/all) or 'community' + 'sort' for community-specific feeds. These modes are mutually exclusive.",
       "parameters": {
         "type": "params",
         "properties": {
           "feed": {
             "type": "string",
-            "enum": ["home", "popular", "new", "controversial"],
+            "enum": ["home", "all"],
             "default": "home",
-            "description": "Type of feed to retrieve"
+            "description": "Type of global feed to retrieve (mutually exclusive with community parameter)"
           },
           "community": {
             "type": "string",
             "format": "at-identifier",
-            "description": "Filter by specific community (DID or handle)"
+            "description": "Get community feed for specific community (DID or handle, mutually exclusive with feed parameter)"
+          },
+          "sort": {
+            "type": "string",
+            "enum": ["hot", "top", "new"],
+            "default": "hot",
+            "description": "Sort order for community feeds (required when community is specified, ignored for global feeds)"
           },
           "postType": {
             "type": "string",
@@ -36,12 +42,12 @@
             "type": "string",
             "enum": ["hour", "day", "week", "month", "year", "all"],
             "default": "day",
-            "description": "Timeframe for popular/controversial feeds"
+            "description": "Timeframe for top sorting (only applies when sort=top)"
           },
           "limit": {
             "type": "integer",
             "minimum": 1,
-            "maximum": 100,
+            "maximum": 50,
             "default": 15
           },
           "cursor": {

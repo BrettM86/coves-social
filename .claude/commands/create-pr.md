@@ -9,7 +9,7 @@ Create a new branch, commit changes, and submit a pull request.
 - Each commit focuses on a single logical change or feature
 - Creates descriptive commit messages for each logical unit
 - Pushes branch to remote
-- Creates pull request with proper summary and test plan
+- Creates pull request with proper summary
 
 ## Guidelines for Automatic Commit Splitting
 - Split commits by feature, component, or concern
