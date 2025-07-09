@@ -5,21 +5,26 @@
     "main": {
       "type": "object",
       "description": "Reference to original federated post",
-      "required": ["platform"],
+      "required": ["platform", "uri"],
       "properties": {
         "platform": {
           "type": "string",
-          "knownValues": ["bluesky", "lemmy", "mastodon"],
+          "knownValues": ["bluesky", "lemmy", "atproto"],
           "description": "Platform the post originated from"
         },
         "uri": {
           "type": "string",
           "format": "uri",
-          "description": "Original URI of the post"
+          "description": "Original URI of the post (at:// URI for atproto platforms)"
         },
         "id": {
           "type": "string",
           "description": "Platform-specific post ID"
+        },
+        "originalCreatedAt": {
+          "type": "string",
+          "format": "datetime",
+          "description": "Timestamp when originally posted on source platform"
         }
       }
     }
