@@ -264,15 +264,6 @@
             "type": "string",
             "maxLength": 32
           }
-        },
-        "isRead": {
-          "type": "boolean",
-          "description": "Whether the viewer has read this post (server-side only)"
-        },
-        "readAt": {
-          "type": "string",
-          "format": "datetime",
-          "description": "When the viewer read this post (server-side only)"
         }
       }
     }
