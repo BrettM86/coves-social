@@ -1,5 +1,88 @@
 # Repository Testing Summary
 
+## Lexicon Schema Validation
+
+We use Indigo's lexicon validator to ensure all AT Protocol schemas are valid and properly structured.
+
+### Validation Components:
+1. **Schema Validation** (`cmd/validate-lexicon/main.go`)
+   - Validates all 57 lexicon schema files are valid JSON
+   - Checks cross-references between schemas
+   - Validates test data files against their schemas
+
+2. **Test Data** (`tests/lexicon-test-data/`)
+   - Contains example records for validation testing
+   - Files use naming convention:
+     - `*-valid*.json` - Should pass validation
+     - `*-invalid-*.json` - Should fail validation (tests error detection)
+   - Currently covers 5 record types:
+     - social.coves.actor.profile
+     - social.coves.community.profile  
+     - social.coves.post.record
+     - social.coves.interaction.vote
+     - social.coves.moderation.ban
+
+3. **Validation Library** (`internal/validation/lexicon.go`)
+   - Wrapper around Indigo's ValidateRecord
+   - Provides type-specific validation methods
+   - Supports multiple input formats
+
+### Running Lexicon Validation
+```bash
+# Full validation (schemas + test data) - DEFAULT
+go run cmd/validate-lexicon/main.go
+
+# Schemas only (skip test data validation)
+go run cmd/validate-lexicon/main.go --schemas-only
+
+# Verbose output
+go run cmd/validate-lexicon/main.go -v
+
+# Strict validation mode
+go run cmd/validate-lexicon/main.go --strict
+```
+
+### Test Coverage Warning
+The validator explicitly outputs which record types have test data and which don't. This prevents false confidence from passing tests when schemas lack test coverage.
+
+Example output:
+```
+📋 Validation Summary:
+  Valid test files:   5/5 passed
+  Invalid test files: 2/2 correctly rejected
+
+  ✅ All test files behaved as expected!
+
+📊 Test Data Coverage Summary:
+  - Records with test data: 5 types
+  - Valid test files: 5
+  - Invalid test files: 2 (for error validation)
+
+  Tested record types:
+    ✓ social.coves.actor.profile
+    ✓ social.coves.community.profile
+    ✓ social.coves.post.record
+    ✓ social.coves.interaction.vote
+    ✓ social.coves.moderation.ban
+
+  ⚠️  Record types without test data:
+    - social.coves.actor.membership
+    - social.coves.actor.subscription
+    - social.coves.community.rules
+    ... (8 more)
+
+  Coverage: 5/16 record types have test data (31.2%)
+```
+
+### Running Tests
+```bash
+# Run lexicon validation tests
+go test -v ./tests/lexicon_validation_test.go
+
+# Run validation library tests  
+go test -v ./internal/validation/...
+```
+
 ## Test Infrastructure Setup
 - Created Docker Compose configuration for isolated test database on port 5434
 - Test database is completely separate from development (5433) and production (5432)
