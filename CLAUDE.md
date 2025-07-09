@@ -1,4 +1,4 @@
-Project:
+Project:  
 You are a distinguished developer helping build Coves, a forum like atProto social media platform (think reddit / lemmy).
 
 Human & LLM Readability Guidelines:
@@ -33,9 +33,9 @@ Key principles:
 
 ## Required Layered Architecture
 Follow this strict separation of concerns:
-```
-Handler (XRPC) → Service (Business Logic) → Repository (Data Access) → Database
-```
+```  
+Handler (XRPC) → Service (Business Logic) → Repository (Data Access) → Database  
+```  
 - Handlers: XRPC request/response only
 - Services: Business logic, uses both write/read repos
 - Write Repos: CAR store operations
@@ -51,13 +51,13 @@ The project follows a layered architecture with clear separation between:
   - Only handle XRPC concerns: parsing requests, formatting responses
   - Delegate all business logic to services
   - No direct database access
-- **Core business logic** - Domain services and models  
+- **Core business logic** - Domain services and models
   - Contains all business logic
   - Orchestrates between write and read repositories
   - Manages transactions and complex operations
 - **Data repositories** - Split between CAR store writes and AppView reads
   - **Write Repositories** (`internal/atproto/carstore/*_write_repo.go`)
-      - Modify CAR files (source of truth)
+    - Modify CAR files (source of truth)
 - **Read Repositories** (`db/appview/*_read_repo.go`)
   - Query denormalized PostgreSQL tables
   - Optimized for performance
@@ -108,13 +108,13 @@ Before considering a feature complete:
 - Wire dependencies in main.go or cmd/server/main.go
 
 Example dependency wiring:
-```go
-// main.go
-userWriteRepo := carstore.NewUserWriteRepository(carStore)
-userReadRepo := appview.NewUserReadRepository(db)
-userService := users.NewUserService(userWriteRepo, userReadRepo)
-userHandler := xrpc.NewUserHandler(userService)
-```
+```go  
+// main.go  
+userWriteRepo := carstore.NewUserWriteRepository(carStore)  
+userReadRepo := appview.NewUserReadRepository(db)  
+userService := users.NewUserService(userWriteRepo, userReadRepo)  
+userHandler := xrpc.NewUserHandler(userService)  
+```  
 
 ## Error Handling
 - Define custom error types in core/errors/
@@ -137,3 +137,5 @@ For detailed XRPC patterns and Lexicon examples, see [ATPROTO_GUIDE.md](./ATPROT
 - Handlers validate against Lexicon schemas automatically
 - Queries are read-only, procedures modify repositories
 - Every endpoint must have a corresponding Lexicon definition
+
+Key note: we are pre-production, we do not need migration strategies, feel free to tear down and rebuild, however ensure to erase any unneeded data structures or code.
