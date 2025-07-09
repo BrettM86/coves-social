@@ -1,0 +1,23 @@
+{
+  "$type": "social.coves.interaction.comment",
+  "subject": "at://did:plc:author123/social.coves.post.record/3k7a3dmb5bk2c",
+  "content": {
+    "$type": "social.coves.interaction.comment#textContent",
+    "text": "Great post! I especially liked the part about @alice.example.com's contribution to the project.",
+    "facets": [
+      {
+        "index": {
+          "byteStart": 46,
+          "byteEnd": 64
+        },
+        "features": [
+          {
+            "$type": "social.coves.richtext.facet#mention",
+            "did": "did:plc:aliceuser123"
+          }
+        ]
+      }
+    ]
+  },
+  "createdAt": "2025-01-09T16:30:00Z"
+}

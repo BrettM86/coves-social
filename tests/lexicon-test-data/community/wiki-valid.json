@@ -1,0 +1,13 @@
+{
+  "$type": "social.coves.community.wiki",
+  "slug": "getting-started",
+  "title": "Getting Started with Our Community",
+  "content": "# Welcome to the Programming Community\n\nThis guide will help you get started with our community.\n\n## Rules\nPlease read our community rules before posting.\n\n## Resources\n- [FAQ](/wiki/faq)\n- [Posting Guidelines](/wiki/posting-guidelines)\n- [Code of Conduct](/wiki/code-of-conduct)",
+  "author": "did:plc:moderator123",
+  "editors": ["did:plc:editor1", "did:plc:editor2"],
+  "isIndex": false,
+  "createdAt": "2024-01-01T00:00:00Z",
+  "updatedAt": "2025-01-09T15:00:00Z",
+  "revision": 5,
+  "tags": ["meta", "help", "guide"]
+}

@@ -1,0 +1,9 @@
+{
+  "$type": "social.coves.moderation.ruleProposal",
+  "community": "did:plc:community123",
+  "proposalType": "updateRule",
+  "title": "Update harassment policy",
+  "description": "Strengthen the harassment policy",
+  "requiredVotes": -50,
+  "createdAt": "2025-01-09T17:00:00Z"
+}

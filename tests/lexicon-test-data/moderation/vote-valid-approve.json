@@ -1,0 +1,6 @@
+{
+  "$type": "social.coves.moderation.vote",
+  "subject": "at://did:plc:community123/social.coves.moderation.ruleProposal/3k7a3dmb5bk2c",
+  "vote": "approve",
+  "createdAt": "2025-01-09T18:30:00Z"
+}

@@ -52,7 +52,7 @@
           },
           "moderationType": {
             "type": "string",
-            "knownValues": ["moderator", "sortition"],
+            "enum": ["moderator", "sortition"],
             "description": "Type of moderation system"
           },
           "contentWarnings": {

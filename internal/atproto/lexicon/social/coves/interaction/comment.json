@@ -60,7 +60,7 @@
       "properties": {
         "image": {
           "type": "ref",
-          "ref": "social.coves.embed.image"
+          "ref": "social.coves.embed.images#image"
         },
         "caption": {
           "type": "string",

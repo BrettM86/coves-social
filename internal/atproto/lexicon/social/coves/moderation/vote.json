@@ -17,7 +17,7 @@
           },
           "vote": {
             "type": "string",
-            "knownValues": ["approve", "reject", "abstain"]
+            "enum": ["approve", "reject", "abstain"]
           },
           "reason": {
             "type": "string",

@@ -1,0 +1,7 @@
+{
+  "$type": "social.coves.community.wiki",
+  "slug": "this-slug-is-way-too-long-and-exceeds-the-maximum-allowed-length-of-128-characters-which-should-trigger-a-validation-error-when-we-run-the-test",
+  "title": "Invalid Wiki Page",
+  "content": "This wiki page has a slug that exceeds the maximum length.",
+  "createdAt": "2024-01-01T00:00:00Z"
+}

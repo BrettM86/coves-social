@@ -1,0 +1,44 @@
+{
+  "$type": "social.coves.community.rules",
+  "postTypes": {
+    "allowText": true,
+    "allowVideo": true,
+    "allowImage": true,
+    "allowArticle": true
+  },
+  "contentRestrictions": {
+    "blockedDomains": ["spam.com", "malware.com"],
+    "allowedDomains": []
+  },
+  "geoRestrictions": {
+    "enabled": true,
+    "allowedCountries": ["US", "CA", "GB", "AU"],
+    "allowedRegions": []
+  },
+  "customTags": ["help", "announcement", "discussion", "tutorial"],
+  "textRules": [
+    {
+      "title": "Be respectful",
+      "description": "Treat all members with respect. No harassment, hate speech, or personal attacks.",
+      "createdAt": "2024-01-01T00:00:00Z",
+      "isActive": true
+    },
+    {
+      "title": "No spam",
+      "description": "Do not post spam, including excessive self-promotion or irrelevant content.",
+      "createdAt": "2024-01-01T00:00:00Z",
+      "isActive": true
+    },
+    {
+      "title": "Stay on topic",
+      "description": "Posts must be related to programming and software development.",
+      "createdAt": "2024-01-01T00:00:00Z",
+      "isActive": true
+    }
+  ],
+  "sortitionConfig": {
+    "tagThreshold": 15,
+    "tribunalThreshold": 30,
+    "jurySize": 9
+  }
+}
