@@ -1,0 +1,11 @@
+{
+  "$type": "social.coves.post.record",
+  "community": "did:plc:programming123",
+  "postType": "invalid-type",
+  "title": "This has an invalid post type",
+  "text": "The postType field has an invalid value",
+  "tags": [],
+  "language": "en",
+  "contentWarnings": [],
+  "createdAt": "2025-01-09T14:30:00Z"
+}
