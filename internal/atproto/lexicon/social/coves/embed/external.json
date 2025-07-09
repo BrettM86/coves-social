@@ -4,7 +4,7 @@
   "defs": {
     "main": {
       "type": "object",
-      "description": "External link embed with preview metadata",
+      "description": "External link embed with preview metadata and provider support",
       "required": ["uri"],
       "properties": {
         "uri": {
@@ -31,6 +31,29 @@
         "domain": {
           "type": "string",
           "description": "Domain of the linked content"
+        },
+        "embedType": {
+          "type": "string",
+          "enum": ["article", "image", "video-stream"],
+          "description": "Type hint for special handling of known providers"
+        },
+        "provider": {
+          "type": "string",
+          "description": "Service provider name (e.g., imgur, streamable)"
+        },
+        "images": {
+          "type": "array",
+          "maxLength": 8,
+          "description": "Preview images for image gallery providers",
+          "items": {
+            "type": "ref",
+            "ref": "social.coves.embed.images#image"
+          }
+        },
+        "totalCount": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total number of items if more than displayed (for galleries)"
         }
       }
     }
