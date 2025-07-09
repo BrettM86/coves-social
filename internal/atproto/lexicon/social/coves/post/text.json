@@ -1,0 +1,94 @@
+{
+  "lexicon": 1,
+  "id": "social.coves.post.text",
+  "defs": {
+    "main": {
+      "type": "record",
+      "description": "A text post",
+      "key": "tid",
+      "record": {
+        "type": "object",
+        "required": ["community", "title", "createdAt"],
+        "properties": {
+          "community": {
+            "type": "string",
+            "format": "at-identifier",
+            "description": "DID or handle of the community this was posted to"
+          },
+          "title": {
+            "type": "string",
+            "maxGraphemes": 300,
+            "maxLength": 3000,
+            "description": "Post title"
+          },
+          "content": {
+            "type": "string",
+            "maxLength": 50000,
+            "description": "Markdown-formatted post content"
+          },
+          "facets": {
+            "type": "array",
+            "description": "Rich text annotations",
+            "items": {
+              "type": "ref",
+              "ref": "social.coves.richtext.facet"
+            }
+          },
+          "tags": {
+            "type": "array",
+            "maxLength": 10,
+            "description": "Post tags/categories",
+            "items": {
+              "type": "string",
+              "maxLength": 32
+            }
+          },
+          "contentLabels": {
+            "type": "array",
+            "description": "Self-applied content labels",
+            "items": {
+              "type": "string",
+              "knownValues": ["nsfw", "spoiler", "violence"],
+              "maxLength": 32
+            }
+          },
+          "federatedFrom": {
+            "type": "ref",
+            "ref": "social.coves.federation.post"
+          },
+          "location": {
+            "type": "ref",
+            "ref": "social.coves.actor.profile#geoLocation"
+          },
+          "embed": {
+            "type": "union",
+            "description": "Optional embedded content",
+            "refs": [
+              "social.coves.embed.image",
+              "social.coves.embed.video",
+              "social.coves.embed.external",
+              "social.coves.embed.post"
+            ]
+          },
+          "crosspostOf": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "If this is a crosspost, AT-URI of the post this is a crosspost of"
+          },
+          "crosspostChain": {
+            "type": "array",
+            "description": "Array of AT-URIs of all posts in the crosspost chain (including this one)",
+            "items": {
+              "type": "string",
+              "format": "at-uri"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime"
+          }
+        }
+      }
+    }
+  }
+}
