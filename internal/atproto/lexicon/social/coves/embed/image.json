@@ -1,27 +1,10 @@
 {
   "lexicon": 1,
-  "id": "social.coves.embed.images",
+  "id": "social.coves.embed.image",
   "defs": {
     "main": {
       "type": "object",
-      "description": "Image set embed supporting multiple images (max 8)",
-      "required": ["images"],
-      "properties": {
-        "images": {
-          "type": "array",
-          "minLength": 1,
-          "maxLength": 8,
-          "description": "Set of images in the post",
-          "items": {
-            "type": "ref",
-            "ref": "#image"
-          }
-        }
-      }
-    },
-    "image": {
-      "type": "object",
-      "description": "Individual image with metadata",
+      "description": "Image embed with metadata",
       "required": ["image"],
       "properties": {
         "image": {
@@ -37,8 +20,7 @@
         },
         "aspectRatio": {
           "type": "ref",
-          "ref": "#aspectRatio",
-          "description": "Aspect ratio for client-side rendering optimization"
+          "ref": "#aspectRatio"
         }
       }
     },
@@ -49,13 +31,11 @@
       "properties": {
         "width": {
           "type": "integer",
-          "minimum": 1,
-          "description": "Width component of aspect ratio"
+          "minimum": 1
         },
         "height": {
           "type": "integer",
-          "minimum": 1,
-          "description": "Height component of aspect ratio"
+          "minimum": 1
         }
       }
     }

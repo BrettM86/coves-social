@@ -4,7 +4,7 @@
   "defs": {
     "main": {
       "type": "query",
-      "description": "Get a feed of posts with optional filtering by post type",
+      "description": "Get a feed of posts",
       "parameters": {
         "type": "params",
         "properties": {
@@ -18,19 +18,6 @@
             "type": "string",
             "format": "at-identifier",
             "description": "Filter by specific community (DID or handle)"
-          },
-          "postType": {
-            "type": "string",
-            "enum": ["text", "article", "image", "video", "microblog"],
-            "description": "Filter by a single post type"
-          },
-          "postTypes": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "enum": ["text", "article", "image", "video", "microblog"]
-            },
-            "description": "Filter by multiple post types"
           },
           "timeframe": {
             "type": "string",
@@ -71,7 +58,7 @@
     },
     "feedPost": {
       "type": "object",
-      "required": ["uri", "author", "community", "postType", "createdAt"],
+      "required": ["uri", "author", "community", "type", "createdAt"],
       "properties": {
         "uri": {
           "type": "string",
@@ -85,39 +72,43 @@
           "type": "ref",
           "ref": "social.coves.post.get#communityRef"
         },
-        "postType": {
+        "type": {
           "type": "string",
-          "enum": ["text", "article", "image", "video", "microblog"],
-          "description": "Type of the post for UI rendering"
+          "enum": ["text", "image", "video", "article", "microblog"]
         },
         "title": {
           "type": "string"
         },
-        "content": {
+        "text": {
           "type": "string",
           "maxLength": 500,
-          "description": "Truncated preview of the post content"
+          "description": "Truncated preview of the post text"
         },
-        "embed": {
-          "type": "union",
-          "description": "Embedded content preview",
-          "refs": [
-            "social.coves.post.get#imagesView",
-            "social.coves.post.get#videoView",
-            "social.coves.post.get#externalView",
-            "social.coves.post.get#postView"
-          ]
+        "images": {
+          "type": "array",
+          "maxLength": 4,
+          "description": "Preview of images (max 4)",
+          "items": {
+            "type": "ref",
+            "ref": "social.coves.post.get#imageView"
+          }
         },
-        "originalAuthor": {
+        "video": {
           "type": "ref",
-          "ref": "social.coves.post.record#originalAuthor",
-          "description": "For microblog posts - original author info"
+          "ref": "social.coves.post.get#videoView"
         },
-        "contentLabels": {
+        "external": {
+          "type": "ref",
+          "ref": "social.coves.post.get#externalView"
+        },
+        "tags": {
           "type": "array",
           "items": {
             "type": "string"
           }
+        },
+        "nsfw": {
+          "type": "boolean"
         },
         "createdAt": {
           "type": "string",

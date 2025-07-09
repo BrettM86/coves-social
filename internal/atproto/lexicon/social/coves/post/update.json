@@ -22,37 +22,32 @@
               "maxLength": 3000,
               "description": "Updated title"
             },
-            "content": {
+            "text": {
               "type": "string",
-              "maxLength": 50000,
-              "description": "Updated content - main text for text posts, description for media, etc."
+              "maxGraphemes": 10000,
+              "maxLength": 100000,
+              "description": "Updated body text"
             },
-            "facets": {
+            "textFacets": {
               "type": "array",
-              "description": "Updated rich text annotations for content",
+              "description": "Updated rich text annotations",
               "items": {
                 "type": "ref",
                 "ref": "social.coves.richtext.facet"
               }
             },
-            "embed": {
-              "type": "union",
-              "description": "Updated embedded content (note: changing embed type may be restricted)",
-              "refs": [
-                "social.coves.embed.images",
-                "social.coves.embed.video",
-                "social.coves.embed.external",
-                "social.coves.embed.post"
-              ]
-            },
-            "contentLabels": {
+            "tags": {
               "type": "array",
-              "description": "Updated content labels",
+              "maxLength": 10,
               "items": {
                 "type": "string",
-                "knownValues": ["nsfw", "spoiler", "violence"],
-                "maxLength": 32
-              }
+                "maxLength": 50
+              },
+              "description": "Updated tags"
+            },
+            "nsfw": {
+              "type": "boolean",
+              "description": "Updated NSFW status"
             },
             "editNote": {
               "type": "string",
@@ -93,10 +88,6 @@
         {
           "name": "EditWindowExpired",
           "description": "Edit window has expired (posts can only be edited within 24 hours)"
-        },
-        {
-          "name": "InvalidUpdate",
-          "description": "Invalid update operation (e.g., changing post type)"
         }
       ]
     }

@@ -32,7 +32,7 @@
     },
     "postView": {
       "type": "object",
-      "required": ["uri", "cid", "author", "record", "community", "postType", "createdAt"],
+      "required": ["uri", "cid", "author", "record", "community", "type", "createdAt"],
       "properties": {
         "uri": {
           "type": "string",
@@ -54,7 +54,7 @@
           "type": "ref",
           "ref": "#communityRef"
         },
-        "postType": {
+        "type": {
           "type": "string",
           "enum": ["text", "image", "video", "article", "microblog"]
         },
@@ -85,6 +85,15 @@
         "external": {
           "type": "ref",
           "ref": "#externalView"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "nsfw": {
+          "type": "boolean"
         },
         "language": {
           "type": "string",
@@ -227,14 +236,6 @@
         "shareCount": {
           "type": "integer",
           "minimum": 0
-        },
-        "tagCounts": {
-          "type": "object",
-          "description": "Aggregate counts of tags applied by community members",
-          "additionalProperties": {
-            "type": "integer",
-            "minimum": 0
-          }
         }
       }
     },
@@ -256,14 +257,6 @@
         "savedUri": {
           "type": "string",
           "format": "at-uri"
-        },
-        "tags": {
-          "type": "array",
-          "description": "Tags applied by the viewer to this post",
-          "items": {
-            "type": "string",
-            "maxLength": 32
-          }
         }
       }
     }
