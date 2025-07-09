@@ -1,0 +1,10 @@
+{
+  "$type": "social.coves.community.profile",
+  "name": "programming",
+  "displayName": "Programming Community",
+  "description": "A community for programmers",
+  "creator": "did:plc:creator123456",
+  "moderationType": "moderator",
+  "federatedFrom": "coves",
+  "createdAt": "2023-12-01T08:00:00Z"
+}
