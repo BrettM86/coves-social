@@ -4,7 +4,8 @@
     "allowText": true,
     "allowVideo": true,
     "allowImage": true,
-    "allowArticle": true
+    "allowArticle": true,
+    "allowMicroblog": true
   },
   "contentRestrictions": {
     "blockedDomains": ["spam.com", "malware.com"],
@@ -36,8 +37,11 @@
       "isActive": true
     }
   ],
-  "sortitionConfig": {
-    "tagThreshold": 15,
+  "moderationConfig": {
+    "$type": "social.coves.community.rules#sortitionModeration",
+    "negativeTags": ["spam", "hostile", "offtopic", "misleading"],
+    "customNegativeTags": ["lowquality", "duplicate"],
+    "hideThreshold": 15,
     "tribunalThreshold": 30,
     "jurySize": 9
   }

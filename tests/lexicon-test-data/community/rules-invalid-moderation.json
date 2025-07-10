@@ -1,7 +1,8 @@
 {
   "$type": "social.coves.community.rules",
-  "sortitionConfig": {
-    "tagThreshold": 5,
+  "moderationConfig": {
+    "negativeTags": ["spam", "hostile"],
+    "hideThreshold": 3,
     "tribunalThreshold": 30,
     "jurySize": 9
   }
