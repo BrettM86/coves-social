@@ -1,0 +1,17 @@
+{
+  "$type": "social.coves.community.rules",
+  "postTypes": {
+    "allowText": true,
+    "allowVideo": false,
+    "allowImage": true,
+    "allowArticle": true,
+    "allowMicroblog": false
+  },
+  "customTags": ["announcement", "pinned"],
+  "moderationConfig": {
+    "$type": "social.coves.community.rules#moderatorModeration",
+    "negativeTags": ["spam", "hostile", "offtopic", "misleading"],
+    "customNegativeTags": ["loweffort"],
+    "hideThreshold": 20
+  }
+}

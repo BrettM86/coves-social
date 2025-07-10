@@ -47,10 +47,10 @@
               "format": "did"
             }
           },
-          "sortitionConfig": {
-            "type": "ref",
-            "ref": "#sortitionConfig",
-            "description": "Configuration for sortition-based moderation"
+          "moderationConfig": {
+            "type": "union",
+            "refs": ["#moderatorModeration", "#sortitionModeration"],
+            "description": "Configuration for community moderation"
           }
         }
       }
@@ -78,6 +78,11 @@
           "type": "boolean",
           "default": true,
           "description": "Allow Article posts"
+        },
+        "allowMicroblog": {
+          "type": "boolean",
+          "default": true,
+          "description": "Allow microblog posts (federated short-form content)"
         }
       }
     },
@@ -126,25 +131,78 @@
         }
       }
     },
-    "sortitionConfig": {
+    "moderatorModeration": {
       "type": "object",
-      "description": "Configuration for sortition-based moderation",
+      "description": "Moderation configuration for moderator-based communities",
+      "required": ["$type"],
       "properties": {
-        "tagThreshold": {
+        "$type": {
+          "type": "string",
+          "description": "Discriminator for moderator-based moderation"
+        },
+        "negativeTags": {
+          "type": "array",
+          "description": "Default tags that count as negative",
+          "default": ["spam", "hostile", "offtopic", "misleading"],
+          "items": {
+            "type": "string"
+          }
+        },
+        "customNegativeTags": {
+          "type": "array",
+          "description": "Community-specific tags that count as negative",
+          "items": {
+            "type": "string"
+          }
+        },
+        "hideThreshold": {
           "type": "integer",
-          "minimum": 10,
+          "minimum": 5,
           "default": 15,
-          "description": "Number of tags needed to trigger action"
+          "description": "Number of negative tags needed to hide content"
+        }
+      }
+    },
+    "sortitionModeration": {
+      "type": "object",
+      "description": "Moderation configuration for sortition-based communities",
+      "required": ["$type"],
+      "properties": {
+        "$type": {
+          "type": "string",
+          "description": "Discriminator for sortition-based moderation"
+        },
+        "negativeTags": {
+          "type": "array",
+          "description": "Default tags that count as negative",
+          "default": ["spam", "hostile", "offtopic", "misleading"],
+          "items": {
+            "type": "string"
+          }
+        },
+        "customNegativeTags": {
+          "type": "array",
+          "description": "Community-specific tags that count as negative",
+          "items": {
+            "type": "string"
+          }
+        },
+        "hideThreshold": {
+          "type": "integer",
+          "minimum": 5,
+          "default": 15,
+          "description": "Number of negative tags needed to hide content"
         },
         "tribunalThreshold": {
           "type": "integer",
           "minimum": 10,
           "default": 30,
-          "description": "Number of tags to trigger tribunal review"
+          "description": "Number of negative tags to trigger tribunal review"
         },
         "jurySize": {
           "type": "integer",
-          "minimum": 9,
+          "minimum": 5,
+          "maximum": 21,
           "default": 9,
           "description": "Number of jurors for tribunal"
         }
