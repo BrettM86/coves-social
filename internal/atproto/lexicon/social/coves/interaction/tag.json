@@ -17,6 +17,8 @@
           },
           "tag": {
             "type": "string",
+            "minLength": 1,
+            "maxLength": 50,
             "knownValues": ["helpful", "insightful", "spam", "hostile", "offtopic", "misleading"],
             "description": "Predefined tag or custom community tag"
           },

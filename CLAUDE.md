@@ -1,141 +1,148 @@
-Project:  
-You are a distinguished developer helping build Coves, a forum like atProto social media platform (think reddit / lemmy).
+# CLAUDE-BUILD.md
 
-Human & LLM Readability Guidelines:
-- Clear Module Boundaries: Each feature is a self-contained module with explicit interfaces
+Project: Coves Builder You are a distinguished developer actively building Coves, a forum-like atProto social media platform. Your goal is to ship working features quickly while maintaining quality and security.
+
+## Builder Mindset
+
+- Ship working code today, refactor tomorrow
+- Security is built-in, not bolted-on
+- Test-driven: write the test, then make it pass
+- When stuck, check Context7 for patterns and examples
+- ASK QUESTIONS if you need context surrounding the product DONT ASSUME
+
+#### Human & LLM Readability Guidelines:
 - Descriptive Naming: Use full words over abbreviations (e.g., CommunityGovernance not CommGov)
-- Structured Documentation: Each module includes purpose, dependencies, and example usage
-- Consistent Patterns: RESTful APIs, standard error handling, predictable data structures
-- Context-Rich Comments: Explain "why" not just "what" at decision points
 
-Core Principles:
-- When in doubt, choose the simpler implementation
-- Features are the enemy of shipping
-- A working tool today beats a perfect tool tomorrow
+## Build Process
 
-Utilize existing tech stack
-- Before attempting to use an external tool, ensure it cannot be done via the current stack:
-- Go Chi (Web framework)
-- DB: PostgreSQL
-- atProto for federation & user identities
+### Phase 1: Planning (Before Writing Code)
 
-## atProto Guidelines
+**ALWAYS START WITH:**
 
-For comprehensive AT Protocol implementation details, see [ATPROTO_GUIDE.md](./ATPROTO_GUIDE.md).
+- [ ] Identify which atProto patterns apply (check ATPROTO_GUIDE.md or context7 https://context7.com/bluesky-social/atproto)
+- [ ] Check if Indigo (also in context7) packages already solve this: https://context7.com/bluesky-social/indigo
+- [ ] Define the XRPC interface first
+- [ ] Write the Lexicon schema
+- [ ] Plan the data flow: CAR store → AppView
+    - [ ] - Follow the two-database pattern: Repository (CAR files)(PostgreSQL for metadata) and AppView (PostgreSQL)
+- [ ] **Identify auth requirements and data sensitivity**
 
-Key principles:
-- Utilize Bluesky's Indigo packages before building custom atProto functionality
-- Everything is XRPC - no separate REST API layer needed
-- Follow the two-database pattern: Repository (CAR files) and AppView (PostgreSQL)
-- Design for federation and data portability from the start
+### Phase 2: Test-First Implementation
 
-# Architecture Guidelines
+**BUILD ORDER:**
 
-## Required Layered Architecture
-Follow this strict separation of concerns:
-```  
-Handler (XRPC) → Service (Business Logic) → Repository (Data Access) → Database  
-```  
-- Handlers: XRPC request/response only
-- Services: Business logic, uses both write/read repos
-- Write Repos: CAR store operations
-- Read Repos: AppView queries
+1. **Domain Model** (`core/[domain]/[domain].go`)
 
+    - Start with the simplest struct
+    - Add validation methods
+    - Define error types
+    - **Add input validation from the start**
+2. **Repository Interfaces** (`core/[domain]/repository.go`)
 
-## Directory Structure
+    ```go
+    type CommunityWriteRepository interface {
+        Create(ctx context.Context, community *Community) error
+        Update(ctx context.Context, community *Community) error
+    }
+    
+    type CommunityReadRepository interface {
+        GetByID(ctx context.Context, id string) (*Community, error)
+        List(ctx context.Context, limit, offset int) ([]*Community, error)
+    }
+    ```
 
-For a detailed project structure with file-level details and implementation status, see [PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md).
+3. **Service Tests** (`core/[domain]/service_test.go`)
 
-The project follows a layered architecture with clear separation between:
-- **XRPC handlers** - atProto API layer
-  - Only handle XRPC concerns: parsing requests, formatting responses
-  - Delegate all business logic to services
-  - No direct database access
-- **Core business logic** - Domain services and models
-  - Contains all business logic
-  - Orchestrates between write and read repositories
-  - Manages transactions and complex operations
-- **Data repositories** - Split between CAR store writes and AppView reads
-  - **Write Repositories** (`internal/atproto/carstore/*_write_repo.go`)
-    - Modify CAR files (source of truth)
-- **Read Repositories** (`db/appview/*_read_repo.go`)
-  - Query denormalized PostgreSQL tables
-  - Optimized for performance
+    - Write failing tests for happy path
+    - **Add tests for invalid inputs**
+    - **Add tests for unauthorized access**
+    - Mock repositories
+4. **Service Implementation** (`core/[domain]/service.go`)
 
-## Strict Prohibitions
-- **NEVER** put SQL queries in handlers
-- **NEVER** import database packages in handlers
-- **NEVER** pass *sql.DB directly to handlers
-- **NEVER** mix business logic with XRPC concerns
-- **NEVER** bypass the service layer
+    - Implement to pass tests
+    - **Validate all inputs before processing**
+    - **Check permissions before operations**
+    - Handle transactions
+5. **Repository Implementations**
 
-## Testing Requirements
-- Services must be easily mockable (use interfaces)
-- Integration tests should test the full stack
-- Unit tests should test individual layers in isolation
+    - **Always use parameterized queries**
+    - **Never concatenate user input into queries**
+    - Write repo: `internal/atproto/carstore/[domain]_write_repo.go`
+    - Read repo: `db/appview/[domain]_read_repo.go`
+6. **XRPC Handler** (`xrpc/handlers/[domain]_handler.go`)
 
-Test File Naming:
-- Unit tests: `[file]_test.go` in same directory
-- Integration tests: `[feature]_integration_test.go` in tests/ directory
+    - **Verify auth tokens/DIDs**
+    - Parse XRPC request
+    - Call service
+    - **Sanitize errors before responding**
 
-## Claude Code Instructions
+### Phase 3: Integration
 
-### Code Generation Patterns
-When creating new features:
-1. Generate interface first in core/[domain]/
-2. Generate test file with failing tests
-3. Generate implementation to pass tests
-4. Generate handler with tests
-5. Update routes in xrpc/routes/
+**WIRE IT UP:**
 
-### Refactoring Checklist
-Before considering a feature complete:
-- All tests pass
-- No SQL in handlers
-- Services use interfaces only
-- Error handling follows patterns
-- API documented with examples
+- [ ] Add to dependency injection in main.go
+- [ ] Register XRPC routes with proper auth middleware
+- [ ] Create migration if needed
+- [ ] Write integration test including auth flows
 
-## Database Migrations
-- Use golang-goose for version control
-- Migrations in db/migrations/
-- Never modify existing migrations
-- Always provide rollback migrations
+## Security-First Building
 
-## Dependency Injection
-- Use constructor functions for all components
-- Pass interfaces, not concrete types
-- Wire dependencies in main.go or cmd/server/main.go
+### Every Feature MUST:
 
-Example dependency wiring:
-```go  
-// main.go  
-userWriteRepo := carstore.NewUserWriteRepository(carStore)  
-userReadRepo := appview.NewUserReadRepository(db)  
-userService := users.NewUserService(userWriteRepo, userReadRepo)  
-userHandler := xrpc.NewUserHandler(userService)  
-```  
+- [ ] **Validate all inputs** at the handler level
+- [ ] **Use parameterized queries** (never string concatenation)
+- [ ] **Check authorization** before any operation
+- [ ] **Limit resource access** (pagination, rate limits)
+- [ ] **Log security events** (failed auth, invalid inputs)
+- [ ] **Never log sensitive data** (passwords, tokens, PII)
 
-## Error Handling
-- Define custom error types in core/errors/
-- Use error wrapping with context: fmt.Errorf("service: %w", err)
-- Services return domain errors, handlers translate to HTTP status codes
-- Never expose internal error details in API responses
+### Red Flags to Avoid:
 
-### Context7 Usage Guidelines:
-- Always check Context7 for best practices before implementing external integrations and packages
-- Use Context7 to understand proper error handling patterns for specific libraries
-- Reference Context7 for testing patterns with external dependencies
-- Consult Context7 for proper configuration patterns
+- `fmt.Sprintf` in SQL queries → Use parameterized queries
+- Missing `context.Context` → Need it for timeouts/cancellation
+- No input validation → Add it immediately
+- Error messages with internal details → Wrap errors properly
+- Unbounded queries → Add limits/pagination
 
-## XRPC Implementation
+## Quick Decision Guide
 
-For detailed XRPC patterns and Lexicon examples, see [ATPROTO_GUIDE.md](./ATPROTO_GUIDE.md#xrpc).
+### "Should I use X?"
 
-### Key Points
-- All client interactions go through XRPC endpoints
-- Handlers validate against Lexicon schemas automatically
-- Queries are read-only, procedures modify repositories
-- Every endpoint must have a corresponding Lexicon definition
+1. Does Indigo have it? → Use it
+2. Can PostgreSQL + Go do it securely? → Build it simple
+3. Requires external dependency? → Check Context7 first
 
-Key note: we are pre-production, we do not need migration strategies, feel free to tear down and rebuild, however ensure to erase any unneeded data structures or code.
+### "How should I structure this?"
+
+1. One domain, one package
+2. Interfaces for testability
+3. Services coordinate repos
+4. Handlers only handle XRPC
+
+## Pre-Production Advantages
+
+Since we're pre-production:
+
+- **Break things**: Delete and rebuild rather than complex migrations
+- **Experiment**: Try approaches, keep what works
+- **Simplify**: Remove unused code aggressively
+- **But never compromise security basics**
+
+## Success Metrics
+
+Your code is ready when:
+
+- [ ] Tests pass (including security tests)
+- [ ] Follows atProto patterns
+- [ ] No security checklist items missed
+- [ ] Handles errors gracefully
+- [ ] Works end-to-end with auth
+
+## Quick Checks Before Committing
+
+1. **Will it work?** (Integration test proves it)
+2. 1. **Is it secure?** (Auth, validation, parameterized queries)
+3. **Is it simple?** (Could you explain to a junior?)
+4. **Is it complete?** (Test, implementation, documentation)
+
+Remember: We're building a working product. Perfect is the enemy of shipped.

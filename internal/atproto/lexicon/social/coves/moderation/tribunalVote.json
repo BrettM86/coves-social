@@ -22,7 +22,7 @@
           },
           "decision": {
             "type": "string",
-            "knownValues": ["remove", "keep", "warn", "ban", "timeout"],
+            "enum": ["remove", "keep", "warn", "ban", "timeout"],
             "description": "Tribunal decision"
           },
           "duration": {

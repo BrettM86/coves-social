@@ -1,0 +1,9 @@
+{
+  "$type": "social.coves.moderation.ruleProposal",
+  "community": "did:plc:community123",
+  "proposalType": "addRule",
+  "title": "Test invalid status",
+  "description": "This should fail validation due to invalid status",
+  "status": "invalidStatus",
+  "createdAt": "2025-01-09T17:00:00Z"
+}

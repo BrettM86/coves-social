@@ -12,6 +12,7 @@
         "properties": {
           "handle": {
             "type": "string",
+            "format": "handle",
             "maxLength": 253,
             "description": "User's handle"
           },

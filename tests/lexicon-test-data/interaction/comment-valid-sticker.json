@@ -1,0 +1,10 @@
+{
+  "$type": "social.coves.interaction.comment",
+  "subject": "at://did:plc:author123/social.coves.post.record/3k7a3dmb5bk2c",
+  "content": {
+    "$type": "social.coves.interaction.comment#stickerContent",
+    "stickerId": "thumbs-up",
+    "stickerPackId": "default-pack"
+  },
+  "createdAt": "2025-01-09T16:50:00Z"
+}

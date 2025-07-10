@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -270,12 +271,17 @@ func validateTestData(catalog *lexicon.BaseCatalog, testDataPath string, verbose
 				return nil
 			}
 
-			// Parse JSON data
+			// Parse JSON data using Decoder to handle numbers properly
 			var recordData map[string]interface{}
-			if err := json.Unmarshal(data, &recordData); err != nil {
+			decoder := json.NewDecoder(bytes.NewReader(data))
+			decoder.UseNumber() // This preserves numbers as json.Number instead of float64
+			if err := decoder.Decode(&recordData); err != nil {
 				validationErrors = append(validationErrors, fmt.Sprintf("Failed to parse JSON in %s: %v", path, err))
 				return nil
 			}
+			
+			// Convert json.Number values to appropriate types
+			recordData = convertNumbers(recordData).(map[string]interface{})
 
 			// Extract $type field
 			recordType, ok := recordData["$type"].(string)
@@ -437,4 +443,35 @@ func validateCrossReferences(catalog *lexicon.BaseCatalog, verbose bool) error {
 	}
 
 	return nil
+}
+
+// convertNumbers recursively converts json.Number values to int64 or float64
+func convertNumbers(v interface{}) interface{} {
+	switch vv := v.(type) {
+	case map[string]interface{}:
+		result := make(map[string]interface{})
+		for k, val := range vv {
+			result[k] = convertNumbers(val)
+		}
+		return result
+	case []interface{}:
+		result := make([]interface{}, len(vv))
+		for i, val := range vv {
+			result[i] = convertNumbers(val)
+		}
+		return result
+	case json.Number:
+		// Try to convert to int64 first
+		if i, err := vv.Int64(); err == nil {
+			return i
+		}
+		// If that fails, convert to float64
+		if f, err := vv.Float64(); err == nil {
+			return f
+		}
+		// If both fail, return as string
+		return vv.String()
+	default:
+		return v
+	}
 }

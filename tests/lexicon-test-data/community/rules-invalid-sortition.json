@@ -1,0 +1,8 @@
+{
+  "$type": "social.coves.community.rules",
+  "sortitionConfig": {
+    "tagThreshold": 5,
+    "tribunalThreshold": 30,
+    "jurySize": 9
+  }
+}

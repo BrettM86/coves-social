@@ -17,7 +17,7 @@
           },
           "proposalType": {
             "type": "string",
-            "knownValues": [
+            "enum": [
               "addTag",
               "removeTag",
               "blockDomain",
@@ -60,7 +60,7 @@
           },
           "status": {
             "type": "string",
-            "knownValues": ["active", "passed", "failed", "cancelled", "implemented"],
+            "enum": ["active", "passed", "failed", "cancelled", "implemented"],
             "default": "active"
           },
           "votingStartsAt": {

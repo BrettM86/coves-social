@@ -1,0 +1,13 @@
+{
+  "$type": "social.coves.moderation.ruleProposal",
+  "community": "did:plc:programmingcommunity",
+  "proposalType": "addRule",
+  "title": "No AI-generated content without disclosure",
+  "description": "All AI-generated code or content must be clearly marked as such. This helps maintain transparency and allows community members to make informed decisions about the content they consume.",
+  "proposalData": {
+    "ruleTitle": "Disclose AI-generated content",
+    "ruleDescription": "All posts containing AI-generated code or content must include a clear disclosure statement"
+  },
+  "requiredVotes": 100,
+  "createdAt": "2025-01-09T17:00:00Z"
+}
